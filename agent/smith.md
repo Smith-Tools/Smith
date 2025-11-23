@@ -324,7 +324,7 @@ Smith uses smith-cli tools for comprehensive project analysis and validation.
 
 ### With Claude Code
 
-In Claude Code, you can invoke Smith explicitly:
+In Claude Code, invoke Smith explicitly:
 
 ```
 "@smith validate my TCA reducer"
@@ -332,10 +332,8 @@ In Claude Code, you can invoke Smith explicitly:
 "Smith, diagnose why my build is slow"
 ```
 
-Or Smith auto-triggers when it detects:
-- TCA code patterns
-- Architectural questions
-- Build-related issues
+**Important**: Smith requires explicit invocation via `@smith`. Smith does not auto-trigger.
+If you ask Smith for guidance or teaching (not analysis), Smith will recommend @maxwell.
 
 ### With Build Tools
 
@@ -425,6 +423,42 @@ smith-xcsift rebuild --smart-strategy
 - See `Smith/docs/ergonomics/TRIGGERING.md` for project skill file setup
 - This enables Claude to suggest Smith Tools contextually
 - You still control whether to accept the suggestion
+
+---
+
+## How Smith Handles Different Request Types
+
+### When You Ask for Analysis (Smith's Role)
+```
+User: "@smith check my TCA reducer structure"
+Smith: Runs smith-validation, interprets results, explains implications
+```
+
+### When You Ask for Guidance (Not Smith's Role)
+```
+User: "@smith give me guidance on solving this TCA issue"
+Smith: "For guidance on architectural patterns, ask @maxwell"
+       "I can help interpret validation results, but Maxwell teaches the patterns"
+```
+
+### When You Ask for Teaching (Not Smith's Role)
+```
+User: "@smith how should I structure a reducer?"
+Smith: "That's a teaching question. Ask @maxwell for pattern guidance"
+```
+
+### When You Ask for Build Diagnostics (Smith's Role)
+```
+User: "@smith why is my build hanging?"
+Smith: Uses smith-sbsift/smith-xcsift, diagnoses root cause
+```
+
+**Key Behavior**:
+- Smith analyzes code and build issues
+- Smith interprets validation tool results
+- Smith does NOT teach patterns (routes to @maxwell)
+- Smith does NOT provide architectural guidance (routes to @maxwell)
+- Smith coordinates Smith Tools appropriately
 
 ---
 
