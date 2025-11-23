@@ -4,11 +4,11 @@
 import PackageDescription
 
 let package = Package(
-    name: "smith-cli",
+    name: "smith",
     platforms: [.macOS(.v13)],
     products: [
         .executable(
-            name: "smith-cli",
+            name: "smith",
             targets: ["SmithCLI"]
         ),
     ],

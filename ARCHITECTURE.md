@@ -70,7 +70,7 @@ smith-xcsift monitor --hang-detection
 
 ### Phase 3: Code Review & Architectural Validation
 
-**Tools**: `smith-validation`, `smith-skill`, `smith-cli`
+**Tools**: `smith-validation`, `smith-skill`, `smith`
 
 **When**: During code review and implementation
 
@@ -89,16 +89,16 @@ smith-xcsift monitor --hang-detection
 - Red flag detection for deprecated patterns
 - Anti-pattern identification
 
-**smith-cli**:
+**smith**:
 - Unified orchestration of all validation
 - Comprehensive project analysis
 - Environment status reporting
 
 **Integration**:
 ```bash
-smith-cli analyze /path/to/project --level critical
-smith-cli validate --tca
-smith-cli optimize
+smith analyze /path/to/project --level critical
+smith validate --tca
+smith optimize
 ```
 
 ---
@@ -137,7 +137,7 @@ smith-core (Foundation)
     ├─→ smith-xcsift (Xcode Build Analysis)
     └─→ smith-validation (Architectural Rules)
         ↓
-        ├─→ smith-cli (Orchestrator)
+        ├─→ smith (Orchestrator)
         └─→ smith-skill (Claude Code Integration)
 ```
 
@@ -209,7 +209,7 @@ smith-core (Foundation)
 
 **Integrated Into**: Smith CLI and Skill
 
-### smith-cli
+### smith
 
 **Purpose**: Unified CLI orchestrator
 
@@ -276,7 +276,7 @@ smith-core (Foundation)
 │                                                          │
 │  Step 4: Code Review                                    │
 │  ↓                                                       │
-│  smith-cli validate --tca                               │
+│  smith validate --tca                               │
 │  Smith Skill in Claude Code                             │
 │  ↓                                                       │
 │  Architectural validation, TCA rules check              │
@@ -381,14 +381,14 @@ They use the same validation rules but serve different users.
 
 1. Create rule in `validation/`
 2. Add test cases
-3. Update smith-cli
+3. Update smith
 4. Document in smith-skill
 
 ### Adding a New Analysis Tool
 
 1. Create tool structure following smith-*sift pattern
 2. Output JSON for integration with CLI
-3. Add orchestration to smith-cli
+3. Add orchestration to smith
 4. Document in START-HERE.md
 
 ### Adding Platform-Specific Guidance

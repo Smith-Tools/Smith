@@ -46,16 +46,16 @@ install: build install-cli install-skill install-tools
 	@echo ""
 	@echo "Next steps:"
 	@echo "  1. Read START-HERE.md for quick start"
-	@echo "  2. Try: smith-cli analyze /path/to/project"
+	@echo "  2. Try: smith analyze /path/to/project"
 	@echo "  3. Use Smith skill in Claude Code"
 
 # Install CLI binary
 install-cli: build
 	@echo "$(BOLD)$(BLUE)Installing Smith CLI...$(RESET)"
 	@mkdir -p ~/.local/bin
-	@cp cli/.build/release/smith-cli ~/.local/bin/
-	@chmod +x ~/.local/bin/smith-cli
-	@echo "$(GREEN)✓ CLI installed to ~/.local/bin/smith-cli$(RESET)"
+	@cp cli/.build/release/smith ~/.local/bin/
+	@chmod +x ~/.local/bin/smith
+	@echo "$(GREEN)✓ CLI installed to ~/.local/bin/smith$(RESET)"
 	@echo ""
 	@echo "Add to PATH if not already present:"
 	@echo "  export PATH=\"\$$HOME/.local/bin:\$$PATH\""
@@ -110,7 +110,7 @@ dev-help:
 	@echo ""
 	@echo "Debugging:"
 	@echo "  cd cli && swift build"
-	@echo "  .build/debug/smith-cli analyze /path/to/project"
+	@echo "  .build/debug/smith analyze /path/to/project"
 	@echo ""
 	@echo "Extending Smith:"
 	@echo "  • Add validation rules in validation/"

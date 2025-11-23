@@ -255,7 +255,7 @@ smith-xcsift diagnose
 smith-xcsift rebuild --smart-strategy
 
 # In CI/CD
-smith-cli validate --tca --level critical
+smith validate --tca --level critical
 ```
 
 ---
@@ -305,10 +305,10 @@ These are Smith's core principles - no exceptions:
 
 ```bash
 # Comprehensive analysis
-smith-cli analyze /path/to/project
+smith analyze /path/to/project
 
 # TCA-specific validation
-smith-cli validate --tca
+smith validate --tca
 
 # Build diagnostics
 smith-sbsift analyze --hang-detection

@@ -30,9 +30,9 @@ swift build -c release
 # Install CLI
 echo ""
 echo "📦 Installing CLI binary..."
-cp .build/release/smith-cli "$LOCAL_BIN/"
-chmod +x "$LOCAL_BIN/smith-cli"
-echo "✅ Installed to $LOCAL_BIN/smith-cli"
+cp .build/release/smith "$LOCAL_BIN/"
+chmod +x "$LOCAL_BIN/smith"
+echo "✅ Installed to $LOCAL_BIN/smith"
 
 # Install Skill
 echo ""
@@ -89,8 +89,8 @@ echo "1. Read START-HERE.md:"
 echo "   open $SMITH_DIR/START-HERE.md"
 echo ""
 echo "2. Try Smith CLI:"
-echo "   smith-cli --help"
-echo "   smith-cli analyze /path/to/your/project"
+echo "   smith --help"
+echo "   smith analyze /path/to/your/project"
 echo ""
 echo "3. Use in Claude Code:"
 echo "   \"@smith validate my code\""

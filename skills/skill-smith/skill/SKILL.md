@@ -96,7 +96,7 @@ For TCA-specific expertise, Smith automatically defers to the dedicated **tca sk
 - ✅ User needs **Swift Package Manager** build optimization or progress tracking
 
 **🔍 For TCA Validation: Use smith-validation + tca skill**
-- ✅ **TCA composition validation** → `smith-cli validate --tca` + **tca skill** for guidance
+- ✅ **TCA composition validation** → `smith validate --tca` + **tca skill** for guidance
 - ✅ **Monolithic features** and **reducer extraction** → **tca skill** for patterns, **smith-validation** for analysis
 - ✅ **TCA testability improvements** → **tca skill** for testing patterns
 - ✅ **TCA architecture guidance** → **tca skill** for decision trees
@@ -474,11 +474,11 @@ Scripts/spm-validate.sh [package-path] [--verbose]
 - **Verbose mode:** `--verbose` flag shows detailed import chains
 - **Critical for:** Debugging Xcode indexing hangs, 1.8GB+ index stores, "Processing files" stuck states
 
-### TCA Composition Validation (smith-cli)
+### TCA Composition Validation (smith)
 
 **Automatic Anti-Pattern Detection (Rules 1.1–1.5):**
 ```bash
-smith-cli validate --tca-only [path] \
+smith validate --tca-only [path] \
   --tca-output swift-testing \
   --tca-min-severity high \
   --tca-max-examples 5
@@ -492,17 +492,17 @@ smith-cli validate --tca-only [path] \
 - Severity filtering (`--tca-min-severity critical|high|…`)
 - **Reference:** See `../archived-smith-scripts/README.md` for historical context on the retired heuristics (tracked under TODO `SV-HEURISTICS-UPGRADE`)
 
-- **Retired heuristics (testability score, dependency graph, extraction suggestions)**: moved to `archived-smith-scripts/` pending TODO `SV-HEURISTICS-UPGRADE` to formalize them as SmithValidation rules. Reach for smith-cli first; consult the archive only if you need the historical logic.
+- **Retired heuristics (testability score, dependency graph, extraction suggestions)**: moved to `archived-smith-scripts/` pending TODO `SV-HEURISTICS-UPGRADE` to formalize them as SmithValidation rules. Reach for smith first; consult the archive only if you need the historical logic.
 
-### TCA Pattern Validation (Swift-Based via smith-cli)
+### TCA Pattern Validation (Swift-Based via smith)
 ```bash
-smith-cli validate --patterns [file-or-directory]
+smith validate --patterns [file-or-directory]
 ```
 - Deep TCA pattern analysis (Swift-based, native toolchain)
 - Detects modern @Reducer vs deprecated patterns
 - Validates @Shared usage and concurrency patterns
 - Provides specific fix recommendations with references
-- **Note:** For basic pattern detection without smith-cli, use `smith-format-check.sh` or composition validators
+- **Note:** For basic pattern detection without smith, use `smith-format-check.sh` or composition validators
 
 ### Deep Compilation Validation
 ```bash
@@ -647,7 +647,7 @@ Evaluate whether code validation is applicable:
 **Traditional Swift Analysis (if no Package.swift):**
 1. `validate-syntax.sh` (quick syntax check)
 2. `validate-compilation-deep.sh` (full compilation, catches hangs)
-3. `smith-cli validate --patterns` (TCA/Swift pattern analysis - via smith-cli)
+3. `smith validate --patterns` (TCA/Swift pattern analysis - via smith)
 
 **Critical Rules:**
 - ALWAYS start with most efficient tool (spm-quick.sh)
@@ -711,7 +711,7 @@ Script output: "3 syntax errors in LoginFeature.swift"
     ↓
 Agent: Fixes syntax based on script output
     ↓
-smith-cli validate --patterns
+smith validate --patterns
     ↓
 Script: "Detected WithViewStore usage (deprecated)"
     ↓

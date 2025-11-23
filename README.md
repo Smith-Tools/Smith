@@ -20,7 +20,7 @@ cd /Volumes/Plutonian/_Developer/Smith\ Tools/Smith
 ```
 
 This installs:
-- ✅ Smith CLI (`smith-cli`)
+- ✅ Smith CLI (`smith`)
 - ✅ Smith Claude Code skill
 - ✅ Integration with build tools
 
@@ -28,10 +28,10 @@ This installs:
 
 ```bash
 # Analyze your project
-smith-cli analyze /path/to/project
+smith analyze /path/to/project
 
 # Validate TCA architecture
-smith-cli validate --tca
+smith validate --tca
 
 # Use in Claude Code
 # Type: "@smith validate my code"
@@ -56,9 +56,9 @@ Interactive architectural guidance in Claude Code:
 For automation and CI/CD:
 
 ```bash
-smith-cli analyze /path/to/project
-smith-cli validate --tca
-smith-cli optimize
+smith analyze /path/to/project
+smith validate --tca
+smith optimize
 ```
 
 ### 3. Build Integration
@@ -166,12 +166,12 @@ swift build 2>&1 | smith-sbsift monitor --eta --hang-detection
 ```
 
 ### Phase 3: Code Review
-**Tools**: `smith-cli`, `smith-skill`
+**Tools**: `smith`, `smith-skill`
 
 Architectural validation against TCA rules, anti-pattern detection, pattern guidance.
 
 ```bash
-smith-cli validate --tca
+smith validate --tca
 # or use Smith skill in Claude Code
 ```
 
@@ -233,19 +233,19 @@ Maxwell teaches pattern → You implement → Smith validates
 
 ```bash
 # Comprehensive analysis
-smith-cli analyze /path/to/project
+smith analyze /path/to/project
 
 # TCA validation
-smith-cli validate --tca
+smith validate --tca
 
 # Performance suggestions
-smith-cli optimize
+smith optimize
 
 # Project type detection
-smith-cli detect
+smith detect
 
 # Build status
-smith-cli status
+smith status
 ```
 
 ### Build Monitoring
@@ -273,7 +273,7 @@ smith-xcsift diagnose --detailed
 smith-spmsift resolve
 
 # Check environment
-smith-cli environment
+smith environment
 ```
 
 ---
@@ -308,7 +308,7 @@ make install
 
 ```bash
 brew tap elkraneo/tap
-brew install smith-cli
+brew install smith
 ```
 
 ---
@@ -352,7 +352,7 @@ brew install smith-cli
 - Read [START-HERE.md](START-HERE.md)
 - Check [ARCHITECTURE.md](ARCHITECTURE.md)
 - Review [agent/smith.md](agent/smith.md)
-- Use `smith-cli --help`
+- Use `smith --help`
 
 ### Extending Smith
 
@@ -384,7 +384,7 @@ Issues in Smith Tools are tracked in the respective repositories:
 
 1. **Install Smith**: `./install.sh`
 2. **Read START-HERE.md**: Get oriented
-3. **Try smith-cli**: `smith-cli analyze /path/to/project`
+3. **Try smith**: `smith analyze /path/to/project`
 4. **Use Smith in Claude Code**: `"@smith validate my code"`
 5. **Monitor your builds**: Pipe through `smith-sbsift`
 

@@ -30,9 +30,9 @@ The skill auto-triggers on:
 
 ### 2. **Use Smith CLI for Automated Analysis**
 ```bash
-smith-cli analyze /path/to/project
-smith-cli validate --tca
-smith-cli optimize
+smith analyze /path/to/project
+smith validate --tca
+smith optimize
 ```
 
 ### 3. **Use Diagnostic Tools During Build**
@@ -94,11 +94,11 @@ make install
 
 ### Using Homebrew
 ```bash
-brew install smith-cli
+brew install smith
 ```
 
 This installs:
-- `smith-cli` - CLI tool
+- `smith` - CLI tool
 - `smith-sbsift` - Swift build analyzer
 - `smith-spmsift` - SPM analyzer
 - `smith-xcsift` - Xcode analyzer
@@ -110,8 +110,8 @@ This installs:
 
 ### Check Architecture of Your Project
 ```bash
-smith-cli analyze --level critical
-smith-cli validate --tca
+smith analyze --level critical
+smith validate --tca
 ```
 
 ### Diagnose Build Hangs
@@ -172,14 +172,14 @@ Ask about `@Reducer`, `@ObservableState`, `@Shared`, `Reducer` composition
 Use `smith-sbsift analyze --hang-detection` or `smith-xcsift diagnose`
 
 ### For Architectural Validation
-Use `smith-cli validate --tca` or invoke Smith skill in Claude Code
+Use `smith validate --tca` or invoke Smith skill in Claude Code
 
 ---
 
 ## Next Steps
 
 1. **Read [ARCHITECTURE.md](ARCHITECTURE.md)** - Understand Smith's design
-2. **Try smith-cli** - `smith-cli analyze /path/to/project`
+2. **Try smith** - `smith analyze /path/to/project`
 3. **Use Smith Skill** - Ask about your code architecture
 4. **Check Your Builds** - Pipe builds through `smith-sbsift`
 
