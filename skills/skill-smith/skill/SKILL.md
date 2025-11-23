@@ -114,6 +114,191 @@ For TCA-specific expertise, Smith automatically defers to the dedicated **tca sk
 - "Use smith + tca skills for my entire TCA app with visionOS" → smith-core + **tca skill** + smith-platforms
 - "Should I use @Shared or @Dependency for this state?" → **tca skill**
 - "How do I test my TCA reducer with Swift Testing?" → **tca skill**
+- "How do I build this project properly?" → **Smart Build Detection (see below)**
+
+## 🏗️ **Smart Build Detection - When Users Ask "How Do I Build This?"**
+
+When a user asks how to properly build their Swift project, **DO NOT provide generic advice**. Instead, **detect the project type and route to the specific tool** with exact commands.
+
+### Detection Logic
+
+```
+1. Check for Package.swift (Swift Package Manager project)
+   → Use smith-spmsift for SPM-specific analysis
+   → Recommended command: smith-spmsift analyze [path]
+
+2. Check for .xcworkspace (Xcode Workspace)
+   → Use smith-xcsift for workspace-specific analysis
+   → Recommended command: smith-xcsift rebuild [path] --scheme [scheme]
+
+3. Check for .xcodeproj (Xcode Project)
+   → Use smith-xcsift for project-specific analysis
+   → Recommended command: smith-xcsift rebuild [path] --scheme [scheme]
+
+4. Unknown project structure
+   → Ask user to clarify project type
+   → Provide guidance for each scenario
+```
+
+### Specific Tool Commands to Recommend
+
+**CRITICAL: These tools are PIPES, not standalone commands**
+
+The analysis tools (smith-sbsift, smith-spmsift, xcsift) work by **piping build output** through them. You must:
+1. Run the actual build command (swift build, xcodebuild)
+2. Pipe its output to the analysis tool
+3. The tool analyzes and reports issues
+
+**For Swift Package Manager projects (Package.swift found):**
+```bash
+# Analyze package structure for issues
+swift package dump-package | spmsift --format json
+
+# Analyze package dependencies
+swift package show-dependencies | spmsift --format detailed
+
+# Build with real-time monitoring and analysis
+swift build 2>&1 | sbsift --monitor
+
+# Build with error parsing and performance analysis
+swift build 2>&1 | sbsift --format json
+```
+
+**For Xcode Workspace projects (.xcworkspace found):**
+```bash
+# Build and analyze with xcsift
+xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll 2>&1 | xcsift
+
+# Build with detailed output to xcsift
+xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -verbose 2>&1 | xcsift
+
+# Parse existing build logs
+cat build.log 2>&1 | xcsift --analyze
+```
+
+**For Xcode Project files (.xcodeproj found):**
+```bash
+# Build and analyze
+xcodebuild build -project Scroll.xcodeproj -scheme Scroll 2>&1 | xcsift
+
+# Build with color output preserved
+xcodebuild build -project Scroll.xcodeproj -scheme Scroll 2>&1 | xcsift --no-color
+```
+
+### Response Pattern
+
+**User:** "How do I build this project properly?"
+
+**Your Response:**
+1. **First:** Detect the project type at the provided path:
+   - Look for `Package.swift` → SPM project
+   - Look for `.xcworkspace` → Xcode Workspace
+   - Look for `.xcodeproj` → Xcode Project
+
+2. **Second:** Report the detected type clearly:
+   ```
+   📁 Project Type: [Workspace/Project/SPM Package]
+   🏗️  Build System: [Xcode/Swift Package Manager]
+   ```
+
+3. **Third:** Provide the exact build command with piped analysis:
+   ```
+   For Xcode Workspace, pipe xcodebuild output to xcsift:
+   xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll 2>&1 | xcsift
+
+   For Swift Package, pipe swift build to sbsift:
+   swift build 2>&1 | sbsift --monitor
+   ```
+
+4. **Fourth:** Explain what the tool provides:
+   - For xcsift: "Analyzes xcodebuild output for errors, warnings, and performance"
+   - For sbsift: "Parses swift build output and identifies bottlenecks"
+   - For spmsift: "Analyzes package structure and dependency issues"
+
+### Anti-Pattern: Generic Build Advice
+
+❌ **Don't do this:**
+```
+"You should try building with the proper commands.
+Let me ask Smith for guidance on how to build projects..."
+
+Then gives generic advice without detecting project type.
+```
+
+✅ **Do this instead:**
+```
+📁 Project Type: Xcode Workspace (Scroll.xcworkspace detected)
+🏗️  Build System: xcodebuild
+
+To build this workspace with analysis, pipe xcodebuild output through xcsift:
+
+xcodebuild build -workspace '/Volumes/Plutonian/_Developer/Scroll/Scroll.xcworkspace' \
+  -scheme Scroll 2>&1 | xcsift
+
+This command:
+• Runs the actual xcodebuild compilation
+• Pipes output to xcsift for analysis
+• Shows errors, warnings, and performance metrics
+• Identifies compilation bottlenecks
+```
+
+### Real Example: The Scroll Project
+
+**Scenario:** User asks "How do I build this properly?" for `/Volumes/Plutonian/_Developer/Scroll`
+
+**Detection Step:**
+```bash
+# Check for project type indicators
+find /Volumes/Plutonian/_Developer/Scroll -maxdepth 1 -name "*.xcworkspace" -o -name "Package.swift"
+# Result: ./Scroll.xcworkspace (Workspace found)
+```
+
+**Weak Response (❌ What Smith was doing before):**
+```
+No, this is a workspace. Ask Smith how to properly build a project.
+
+You're absolutely right - this is a workspace, not a simple Swift package.
+Let me ask Smith for the proper way to build this project.
+
+smith(Ask Smith about building Swift workspaces)
+  Result: "Perfect! Smith gave me the right guidance..."
+
+Then provides generic guidance about "try the proper build commands"
+```
+
+**Strong Response (✅ Improved behavior with CORRECT PIPE SYNTAX):**
+```
+📁 Project Type: Xcode Workspace (Scroll.xcworkspace detected)
+🏗️  Build System: xcodebuild
+
+To properly build and analyze this workspace, use xcodebuild piped to xcsift:
+
+**Standard build with analysis:**
+xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll 2>&1 | xcsift
+
+**Detailed output for debugging:**
+xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -verbose 2>&1 | xcsift
+
+**Clean and rebuild with analysis:**
+xcodebuild clean -workspace Scroll.xcworkspace -scheme Scroll && \
+xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll 2>&1 | xcsift
+
+What xcsift provides:
+• Parses xcodebuild output in real-time
+• Identifies compilation errors and warnings
+• Shows build phase timing and bottlenecks
+• Detects common build configuration issues
+• Provides actionable error messages
+```
+
+### When You're Uncertain
+
+If you cannot reliably detect the project type:
+1. Ask the user: "Is this an Xcode workspace, project, or Swift Package?"
+2. Once they confirm, provide the specific tool recommendation
+3. Include the exact command with their project path
+
+**Never give generic advice like "try running swift build" without first detecting the project type.**
 
 ## 🔄 **Skill Ecosystem Integration**
 
