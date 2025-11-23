@@ -66,23 +66,34 @@ find . -name "*.swift" -type f | head -5
 ```
 
 ### 2. Apple Platform Build Hierarchy
-**STRICT priority order - stop at first match:**
+**STRICT priority order - stop at FIRST match ONLY:**
 
 ```
 1. .xcworkspace found → Use xcodebuild with workspace
-   (Workspace contains dependencies - ALWAYS build workspace, not embedded .xcodeproj)
+   ⚠️  CRITICAL: If .xcworkspace exists, NEVER use .xcodeproj
+   Workspaces contain dependencies - building .xcodeproj misses dependencies
 
 2. .xcodeproj found → Use xcodebuild with project
-   (Single project without workspace dependencies)
+   (Only if NO .xcworkspace exists - single project without workspace)
 
 3. Package.swift found → Use swift build
-   (Swift Package Manager project)
+   (Only if NO .xcworkspace and NO .xcodeproj exist)
 
 4. .swift files only → Use swiftc for direct compilation
-   (Simple Swift files without package/project structure)
+   (Only if NO build system files exist)
 
 5. None of the above → Out of scope for Apple platform builds
 ```
+
+### 2.1. Priority Enforcement Rules
+**NEVER choose .xcodeproj if .xcworkspace exists:**
+
+- **Both exist?** → Use .xcworkspace (highest priority)
+- **Only .xcworkspace?** → Use .xcworkspace
+- **Only .xcodeproj?** → Use .xcodeproj
+- **Both missing?** → Check Package.swift
+
+**This prevents missing dependencies when workspaces are present.**
 
 ### 3. Validate Your Detection
 **ALWAYS state your detection results AND bias prevention:**
@@ -550,8 +561,8 @@ Smith: [Step 0] Detect project type first
    - Build Method: workspace (highest priority)
    - Reason: Workspace contains dependencies - ALWAYS build workspace, not embedded .xcodeproj
 
-⚠️  CRITICAL: Build the workspace, not the embedded .xcodeproj
-Building the .xcodeproj directly will miss workspace dependencies!
+⚠️  CRITICAL: ALWAYS build workspace, never embedded .xcodeproj
+Building .xcworkspace contains all dependencies - .xcodeproj will miss them!
 
 Recommended Commands:
 # Standard build with token-efficient output

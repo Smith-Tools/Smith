@@ -523,6 +523,12 @@ What type of project is this?
 │       └─ Package dump? → swift package dump-package | smith-spmsift parse
 │
 └─ Xcode Project (.xcodeproj/.xcworkspace) → smith-xcsift
+    ⚠️  PRIORITY: .xcworkspace ALWAYS overrides .xcodeproj
+    ├─ .xcworkspace exists? → Use workspace (highest priority)
+    │   ├─ Real-time tracking? → smith-xcsift monitor --workspace ... --eta
+    │   ├─ Standard build? → xcodebuild | smith-xcsift parse
+    │   └─ Analysis? → smith-xcsift analyze --workspace ...
+    └─ NO .xcworkspace, only .xcodeproj? → Use project
     ├─ Need real-time progress tracking?
     │   ├─ YES → smith-xcsift monitor --workspace MyApp.xcworkspace --scheme MyApp --eta
     │   └─ NO → xcodebuild | smith-xcsift parse
