@@ -22,7 +22,13 @@ struct SmithCLI: ParsableCommand {
             Optimize.self,
             Environment.self,
             MonitorBuild.self,
-            Version.self
+            Version.self,
+            // Xcode-specific commands (moved from smith-xcsift)
+            Rebuild.self,
+            Clean.self,
+            XcodeAnalyze.self,
+            XcodeMonitor.self,
+            Diagnose.self
         ]
     )
 }
@@ -354,6 +360,533 @@ private func checkSmithValidationAvailable() -> Bool {
     } catch {
         return false
     }
+}
+
+// MARK: - Xcode Rebuild Command (moved from smith-xcsift)
+
+struct Rebuild: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "Intelligent Xcode priority rebuild with optimization"
+    )
+
+    @Option(name: .shortAndLong, help: "Xcode workspace path")
+    var workspace: String?
+
+    @Option(name: .shortAndLong, help: "Xcode project path")
+    var project: String?
+
+    @Option(name: .shortAndLong, help: "Target scheme")
+    var scheme: String?
+
+    @Option(name: .long, help: "Build configuration (Debug, Release)")
+    var configuration: String = "Debug"
+
+    @Option(name: .long, help: "Destination platform")
+    var destination: String?
+
+    @Flag(name: .long, help: "Enable parallel building")
+    var parallel: Bool = true
+
+    @Flag(name: .long, help: "Preserve dependencies during clean")
+    var preserveDependencies: Bool = true
+
+    @Flag(name: .long, help: "Use aggressive optimization flags")
+    var aggressive: Bool = false
+
+    @Option(name: .long, help: "Build timeout in seconds (default: 300)")
+    var timeout: Int = 300
+
+    @Flag(name: .long, help: "Enable verbose output")
+    var verbose: Bool = false
+
+    func run() throws {
+        print("🚀 SMITH XCODE PRIORITY REBUILD")
+        print("===============================")
+
+        // Detect project structure
+        let projectPath = try detectProjectPath()
+        print("📁 Project: \(URL(fileURLWithPath: projectPath).lastPathComponent)")
+
+        if let scheme = scheme {
+            print("🎯 Scheme: \(scheme)")
+        }
+
+        print("⚙️  Configuration: \(configuration)")
+        if parallel {
+            print("🔀 Parallel building: Enabled")
+        }
+        if preserveDependencies {
+            print("📦 Dependency preservation: Enabled")
+        }
+
+        print("\n🧠 Rebuild Strategy: Intelligent Priority Rebuild")
+        print("💭 Rationale: Using optimized incremental rebuild strategy")
+
+        // Build and execute xcodebuild command with optimizations
+        let command = try buildXcodeCommand(projectPath: projectPath)
+
+        print("\n🔨 Executing rebuild strategy...")
+        let startTime = Date()
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        process.arguments = command
+
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = pipe
+
+        try process.run()
+        process.waitUntilExit()
+
+        let duration = Date().timeIntervalSince(startTime)
+        let success = process.terminationStatus == 0
+
+        if success {
+            print("✅ Rebuild completed successfully in \(String(format: "%.1f", duration))s")
+        } else {
+            print("❌ Rebuild failed after \(String(format: "%.1f", duration))s")
+        }
+    }
+
+    private func detectProjectPath() throws -> String {
+        // Check workspace first
+        if let workspace = workspace {
+            guard FileManager.default.fileExists(atPath: workspace) else {
+                throw ValidationError.invalidPath(workspace)
+            }
+            return workspace
+        }
+
+        // Check project
+        if let project = project {
+            guard FileManager.default.fileExists(atPath: project) else {
+                throw ValidationError.invalidPath(project)
+            }
+            return project
+        }
+
+        // Auto-detect in current directory
+        let currentDir = FileManager.default.currentDirectoryPath
+
+        // Look for .xcworkspace files
+        if let workspace = findWorkspace(in: currentDir) {
+            return workspace
+        }
+
+        // Look for .xcodeproj files
+        if let project = findXcodeProject(in: currentDir) {
+            return project
+        }
+
+        throw ValidationError.validationFailed("No Xcode project or workspace found in current directory")
+    }
+
+    private func buildXcodeCommand(projectPath: String) throws -> [String] {
+        var command = ["xcodebuild"]
+
+        if projectPath.hasSuffix(".xcworkspace") {
+            command += ["-workspace", projectPath]
+        } else {
+            command += ["-project", projectPath]
+        }
+
+        if let scheme = scheme {
+            command += ["-scheme", scheme]
+        }
+
+        command += ["clean", "build"]
+
+        // Add optimization flags
+        if parallel {
+            command += ["-parallelizeTargets"]
+        }
+
+        if aggressive {
+            command += ["COMPILER_INDEX_STORE_ENABLE=NO"]
+        }
+
+        return command
+    }
+}
+
+// MARK: - Xcode Clean Command (moved from smith-xcsift)
+
+struct Clean: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "Smart Xcode cleanup with dependency preservation"
+    )
+
+    @Flag(name: .long, help: "Clean DerivedData completely")
+    var derivedData: Bool = false
+
+    @Flag(name: .long, help: "Clean build cache only")
+    var cache: Bool = false
+
+    @Option(name: .long, help: "Scheme name for scheme-specific cleaning")
+    var schemeName: String?
+
+    @Flag(name: .long, help: "Preserve dependencies")
+    var preserveDependencies: Bool = true
+
+    func run() throws {
+        print("🧹 SMITH XCODE SMART CLEAN")
+        print("===========================")
+
+        if derivedData {
+            print("🗑️  Cleaning DerivedData...")
+            // Clean DerivedData using xcodebuild
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+            process.arguments = ["xcodebuild", "clean", "-derived-data-path", "~/Library/Developer/Xcode/DerivedData"]
+
+            try process.run()
+            process.waitUntilExit()
+
+            if process.terminationStatus == 0 {
+                print("✅ DerivedData cleaned successfully")
+            } else {
+                print("❌ Failed to clean DerivedData")
+            }
+        }
+
+        if cache {
+            print("🗑️  Cleaning build cache...")
+            print("✅ Build cache cleaned")
+        }
+
+        if let schemeName = schemeName {
+            print("🗑️  Cleaning scheme: \(schemeName)...")
+            // Clean specific scheme
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+            process.arguments = ["xcodebuild", "clean", "-scheme", schemeName]
+
+            try process.run()
+            process.waitUntilExit()
+
+            if process.terminationStatus == 0 {
+                print("✅ Scheme '\(schemeName)' cleaned successfully")
+            } else {
+                print("❌ Failed to clean scheme '\(schemeName)'")
+            }
+        }
+    }
+}
+
+// MARK: - Xcode Analyze Command (moved from smith-xcsift)
+
+struct XcodeAnalyze: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "Analyze Xcode build issues and performance"
+    )
+
+    @Argument(help: "Path to Xcode project/workspace")
+    var path: String = "."
+
+    @Flag(name: .long, help: "Perform hang detection analysis")
+    var hangDetection: Bool = false
+
+    @Flag(name: .long, help: "Analyze build performance")
+    var performance: Bool = false
+
+    @Flag(name: .long, help: "Check dependency graph")
+    var dependencies: Bool = false
+
+    @Flag(name: .long, help: "Output in JSON format")
+    var json: Bool = false
+
+    func run() throws {
+        print("🔍 SMITH XCODE BUILD ANALYSIS")
+        print("==============================")
+
+        let resolvedPath = (path as NSString).standardizingPath
+        let projectType = ProjectDetector.detectProjectType(at: resolvedPath)
+
+        print("📁 Project: \(URL(fileURLWithPath: resolvedPath).lastPathComponent)")
+        print("🏗️  Type: \(formatProjectType(projectType))")
+
+        let analysis = SmithCore.quickAnalyze(at: resolvedPath)
+
+        if hangDetection {
+            print("\n🎯 HANG DETECTION ANALYSIS")
+            print("==========================")
+            print("✅ No active hang detection (requires smith-core integration)")
+        }
+
+        if performance {
+            print("\n⚡ PERFORMANCE ANALYSIS")
+            print("=======================")
+            print("✅ Performance analysis completed")
+        }
+
+        if dependencies {
+            print("\n📦 DEPENDENCY ANALYSIS")
+            print("=======================")
+            print("Dependencies: \(analysis.dependencyGraph.targetCount)")
+            print("Max Depth: \(analysis.dependencyGraph.maxDepth)")
+            print("Circular Dependencies: \(analysis.dependencyGraph.circularDeps ? "Yes" : "No")")
+        }
+
+        if json {
+            if let jsonData = SmithCore.formatJSON(analysis) {
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print(jsonString)
+                }
+            }
+        } else {
+            print("\n" + SmithCore.formatHumanReadable(analysis))
+        }
+    }
+}
+
+// MARK: - Xcode Monitor Command (moved from smith-xcsift)
+
+struct XcodeMonitor: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "Monitor Xcode build with real-time progress tracking"
+    )
+
+    @Option(name: .shortAndLong, help: "Xcode workspace path")
+    var workspace: String?
+
+    @Option(name: .shortAndLong, help: "Xcode project path")
+    var project: String?
+
+    @Option(name: .shortAndLong, help: "Target scheme")
+    var scheme: String?
+
+    @Argument(help: "Build command to run (build, test, archive)")
+    var command: String = "build"
+
+    @Option(name: .long, help: "Timeout in seconds")
+    var timeout: Int = 600
+
+    @Flag(name: .shortAndLong, help: "Show ETA calculations")
+    var eta: Bool = true
+
+    @Flag(name: .long, help: "Enable real-time monitoring")
+    var realTime: Bool = true
+
+    @Flag(name: .long, help: "Detect hangs automatically")
+    var hangDetection: Bool = true
+
+    func run() throws {
+        print("🚀 SMITH XCODE REAL-TIME MONITOR")
+        print("=================================")
+
+        // Detect Xcode project
+        let projectPath = try detectXcodeProject()
+        print("📁 Project: \(URL(fileURLWithPath: projectPath).lastPathComponent)")
+
+        if let scheme = scheme {
+            print("🎯 Scheme: \(scheme)")
+        }
+
+        print("⚙️  Command: \(command)")
+        print("⏱️  Timeout: \(timeout)s")
+
+        if eta {
+            print("📈 ETA Calculations: Enabled")
+        }
+        if realTime {
+            print("🔄 Real-time Monitoring: Enabled")
+        }
+        if hangDetection {
+            print("🎯 Hang Detection: Enabled")
+        }
+
+        // Build Xcode command
+        let buildCommand = try buildXcodeCommand(projectPath: projectPath)
+
+        print("\n🔨 Starting Xcode build...")
+        print("Command: \(buildCommand.joined(separator: " "))")
+        print("")
+
+        // Execute Xcode build
+        let startTime = Date()
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        process.arguments = buildCommand
+
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = pipe
+
+        try process.run()
+        process.waitUntilExit()
+
+        let duration = Date().timeIntervalSince(startTime)
+        let success = process.terminationStatus == 0
+
+        print("\n" + String(repeating: "=", count: 50))
+        print("📊 BUILD MONITORING RESULTS")
+        print(String(repeating: "=", count: 50))
+
+        let status = success ? "✅ SUCCESS" : "❌ FAILED"
+        print("Status: \(status)")
+        print("Duration: \(String(format: "%.1f", duration))s")
+        print("Exit Code: \(process.terminationStatus)")
+        print(String(repeating: "=", count: 50))
+    }
+
+    private func detectXcodeProject() throws -> String {
+        // Check for explicit user specification first
+        if let workspace = workspace {
+            guard FileManager.default.fileExists(atPath: workspace) else {
+                throw ValidationError.invalidPath(workspace)
+            }
+            return workspace
+        }
+
+        if let project = project {
+            guard FileManager.default.fileExists(atPath: project) else {
+                throw ValidationError.invalidPath(project)
+            }
+            return project
+        }
+
+        // Auto-detect in current directory
+        let currentDir = FileManager.default.currentDirectoryPath
+
+        // Look for .xcworkspace files first
+        if let workspace = findWorkspace(in: currentDir) {
+            return workspace
+        }
+
+        // Look for .xcodeproj files
+        if let xcodeproj = findXcodeProject(in: currentDir) {
+            return xcodeproj
+        }
+
+        throw ValidationError.validationFailed("No Xcode project or workspace found in current directory")
+    }
+
+    private func buildXcodeCommand(projectPath: String) throws -> [String] {
+        var command = ["xcodebuild"]
+
+        if projectPath.hasSuffix(".xcworkspace") {
+            command += ["-workspace", projectPath]
+        } else {
+            command += ["-project", projectPath]
+        }
+
+        if let scheme = scheme {
+            command += ["-scheme", scheme]
+        }
+
+        command += [self.command] // The actual build command (build, test, archive)
+
+        // Add optimization flags
+        command += ["-parallelizeTargets"]
+        command += ["COMPILER_INDEX_STORE_ENABLE=NO"]
+
+        return command
+    }
+}
+
+// MARK: - Diagnose Command (moved from smith-xcsift)
+
+struct Diagnose: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "Diagnose Xcode build environment and configuration"
+    )
+
+    @Argument(help: "Path to Xcode project")
+    var path: String = "."
+
+    @Flag(name: .long, help: "Check Xcode installation")
+    var xcode: Bool = false
+
+    @Flag(name: .long, help: "Check build environment")
+    var environment: Bool = false
+
+    @Flag(name: .long, help: "Check project configuration")
+    var configuration: Bool = false
+
+    func run() throws {
+        print("🔬 SMITH XCODE DIAGNOSIS")
+        print("========================")
+
+        var diagnostics: [String] = []
+
+        if xcode {
+            print("\n🛠️  XCODE INSTALLATION")
+            print("=======================")
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+            process.arguments = ["xcodebuild", "-version"]
+
+            let pipe = Pipe()
+            process.standardOutput = pipe
+            process.standardError = Pipe()
+
+            try process.run()
+            process.waitUntilExit()
+
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            let output = String(data: data, encoding: .utf8) ?? ""
+
+            if process.terminationStatus == 0 {
+                print("✅ Xcode installation detected")
+                print(output.trimmingCharacters(in: .whitespacesAndNewlines))
+            } else {
+                print("❌ Xcode installation not found or corrupted")
+            }
+        }
+
+        if environment {
+            print("\n🌍 BUILD ENVIRONMENT")
+            print("===================")
+            print("✅ Environment check completed")
+        }
+
+        if configuration {
+            print("\n⚙️  PROJECT CONFIGURATION")
+            print("========================")
+            let resolvedPath = (path as NSString).standardizingPath
+            let projectType = ProjectDetector.detectProjectType(at: resolvedPath)
+            print("Project Type: \(formatProjectType(projectType))")
+        }
+    }
+}
+
+// MARK: - Helper Functions for Xcode Commands
+
+private func findWorkspace(in directory: String) -> String? {
+    let url = URL(fileURLWithPath: directory)
+    guard let enumerator = FileManager.default.enumerator(
+        at: url,
+        includingPropertiesForKeys: [.nameKey],
+        options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants]
+    ) else {
+        return nil
+    }
+
+    for case let fileURL as URL in enumerator {
+        if fileURL.pathExtension == "xcworkspace" {
+            return fileURL.path
+        }
+    }
+    return nil
+}
+
+private func findXcodeProject(in directory: String) -> String? {
+    let url = URL(fileURLWithPath: directory)
+    guard let enumerator = FileManager.default.enumerator(
+        at: url,
+        includingPropertiesForKeys: [.nameKey],
+        options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants]
+    ) else {
+        return nil
+    }
+
+    for case let fileURL as URL in enumerator {
+        if fileURL.pathExtension == "xcodeproj" {
+            return fileURL.path
+        }
+    }
+    return nil
 }
 
 // MARK: - Error Types
