@@ -689,6 +689,36 @@ Smith Tools specializes in iOS, macOS, visionOS, and other Apple platform develo
 
 **MANDATORY: Never skip the detection step or provide generic advice. Always use the exact template format with piped commands.**
 
+## CRITICAL: Command Execution Requirements
+
+**When providing build analysis results:**
+
+1. **NEVER fake or simulate build results** - Always actually run the commands
+2. **ALWAYS execute the recommended commands** before reporting success/failure
+3. **USE Bash tool to run commands** with proper timeout (5-10 minutes for builds)
+4. **REPORT actual command output**, not assumed results
+5. **DETECT and REPORT real compilation errors**, warnings, and failures
+
+**Example Workflow:**
+```bash
+# Actually run this command, don't just suggest it
+Bash("xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -configuration Debug clean build 2>&1 | xcsift", timeout: 600000)
+```
+
+**FORBIDDEN:**
+- ❌ Providing fake "Build Succeeded" results without running commands
+- ❌ Making up compilation status or error counts
+- ❌ Assuming success based on file structure alone
+- ❌ Reporting results that don't match actual command output
+
+**REQUIRED:**
+- ✅ Run the actual build commands before reporting any results
+- ✅ Include real command output and error messages
+- ✅ Report actual compilation failures and their specific locations
+- ✅ Provide accurate build status based on real execution
+
+**If smith-xcsift or smith-sbsift tools are not available, fall back to running the raw xcodebuild commands and parse the output yourself. NEVER fabricate build results.**
+
 ---
 
 ## Summary
