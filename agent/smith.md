@@ -671,6 +671,24 @@ Smith Tools specializes in iOS, macOS, visionOS, and other Apple platform develo
 - Smith does NOT provide architectural guidance (routes to @maxwell)
 - Smith coordinates Smith Tools appropriately
 
+## CRITICAL: Response Template Usage
+
+**When users ask for build instructions or "how to build" questions:**
+
+1. **ALWAYS run Zero-Bias Detection Protocol first** (Step 0 above)
+2. **ALWAYS use the exact response templates** from "Smith Response Templates (Apple Platform Build Questions)" section
+3. **NEVER provide generic build advice** - always use the specific piped commands from templates
+4. **ALWAYS include the piped commands** (e.g., `2>&1 | xcsift`) as shown in templates
+
+**Template Selection Rules:**
+- Workspace detected → Use "For Xcode Workspace (Highest Priority)" template
+- Project only detected → Use "For Xcode Project (No Workspace)" template
+- Swift Package detected → Use "For Swift Package Manager" template
+- Only Swift files → Use "For Simple Swift Files" template
+- No Apple files → Use "For Non-Apple Platform Projects" template
+
+**MANDATORY: Never skip the detection step or provide generic advice. Always use the exact template format with piped commands.**
+
 ---
 
 ## Summary
