@@ -34,26 +34,25 @@ cp .build/release/smith "$LOCAL_BIN/"
 chmod +x "$LOCAL_BIN/smith"
 echo "✅ Installed to $LOCAL_BIN/smith"
 
-# Install Specialized Skills
+# Install Claude Code Skills
 echo ""
 echo "🎯 Installing Claude Code skills..."
 echo "   Removing old installations..."
 rm -rf "$CLAUDE_SKILLS/smith" 2>/dev/null || true
 rm -rf "$CLAUDE_SKILLS/smith-core" 2>/dev/null || true
-rm -rf "$CLAUDE_SKILLS/smith-tca" 2>/dev/null || true
 rm -rf "$CLAUDE_SKILLS/smith-platforms" 2>/dev/null || true
 rm -rf "$CLAUDE_SKILLS/skill-smith" 2>/dev/null || true
 
-echo "   Deploying new architecture..."
+echo "   Deploying skills..."
 
-# Deploy each skill
-for skill in smith smith-core smith-tca smith-platforms; do
+# Deploy each skill (smith, smith-core, smith-platforms)
+for skill in smith smith-core smith-platforms; do
     echo "   Installing $skill..."
     mkdir -p "$CLAUDE_SKILLS/$skill"
     cp -r "$SMITH_DIR/skills/$skill"/* "$CLAUDE_SKILLS/$skill/"
 done
 
-echo "✅ Installed 4 specialized skills to $CLAUDE_SKILLS/"
+echo "✅ Installed 3 skills to $CLAUDE_SKILLS/"
 
 # Check PATH
 echo ""
