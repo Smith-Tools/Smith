@@ -1,6 +1,6 @@
 ---
 name: smith
-description: Swift architecture validation, code analysis, and build health coordinator. Orchestrates smith-core, smith-tca, and smith-platforms for comprehensive development guidance. For TCA-specific questions use smith-tca, for platform patterns use smith-platforms, for general Swift use smith-core.
+description: Swift architecture validation, code analysis, and build health coordinator. Orchestrates smith-core and smith-platforms for comprehensive development guidance. For TCA-specific questions use maxwell-pointfree, for platform patterns use smith-platforms, for general Swift use smith-core.
 tags:
   - "Swift architecture"
   - "validation"

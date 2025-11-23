@@ -512,13 +512,15 @@ Consolidation:
 
 ```
 What type of project is this?
-├─ Swift Package (Package.swift) → smith-sbsift
-│   ├─ Need real-time monitoring?
-│   │   ├─ YES → smith-sbsift monitor --monitor --eta
-│   │   └─ NO → swift build | smith-sbsift parse
-│   └─ Hung build?
-│       ├─ YES → smith-sbsift monitor --hang-detection
-│       └─ NO → smith-sbsift analyze
+├─ Swift Package (Package.swift) → smith-spmsift + smith-sbsift
+│   ├─ Need build analysis? → smith-sbsift (for swift build output)
+│   │   ├─ Real-time monitoring? → smith-sbsift monitor --monitor --eta
+│   │   ├─ Standard build? → swift build | smith-sbsift parse
+│   │   └─ Hung build? → smith-sbsift monitor --hang-detection
+│   └─ Need package analysis? → smith-spmsift (for package structure)
+│       ├─ Package validation? → smith-spmsift validate
+│       ├─ Dependency analysis? → smith-spmsift analyze --metrics
+│       └─ Package dump? → swift package dump-package | smith-spmsift parse
 │
 └─ Xcode Project (.xcodeproj/.xcworkspace) → smith-xcsift
     ├─ Need real-time progress tracking?
