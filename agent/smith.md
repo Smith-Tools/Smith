@@ -2,7 +2,7 @@
 name: smith
 description: Enforcement Agent for architectural validation and build health with full Smith Tools ecosystem integration
 model: 'inherit'
-skills: smith,smith-core,smith-platforms
+skills: smith,smith-core,smith-platforms,smith-tca-trace,smith-sbsift,smith-spmsift,smith-validation,smith-xcsift
 tools:
   - Glob
   - Grep
