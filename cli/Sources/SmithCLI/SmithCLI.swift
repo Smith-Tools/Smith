@@ -159,6 +159,15 @@ struct Validate: ParsableCommand {
     @Flag(name: .long, help: "Perform deep validation")
     var deep = false
 
+    @Option(name: .long, help: "Validation level: critical|standard|comprehensive (default: critical)")
+    var level: String = "critical"
+
+    @Option(name: .long, help: "Output format: json|summary (default: summary)")
+    var format: String = "summary"
+
+    @Option(name: .long, help: "PKL configuration file path")
+    var configPath: String?
+
     func run() throws {
         print("✅ SMITH PROJECT VALIDATION")
         print("==========================")
@@ -174,11 +183,10 @@ struct Validate: ParsableCommand {
         validateDependencies(at: resolvedPath)
 
         // TCA validation (delegate to smith-validation)
-        if projectType == .spm || projectType != .unknown {
-            print("\n🎯 TCA ARCHITECTURAL VALIDATION")
-            print("=================================")
-            validateTCAArchitecture(at: resolvedPath, deep: deep)
-        }
+        // Run smith-validation on any Swift project (more inclusive than just .spm)
+        print("\n🎯 TCA ARCHITECTURAL VALIDATION")
+        print("=================================")
+        validateTCAArchitecture(at: resolvedPath, deep: deep, level: level, format: format, configPath: configPath)
     }
 
     private func validateDependencies(at path: String) {
@@ -193,7 +201,7 @@ struct Validate: ParsableCommand {
         }
     }
 
-    private func validateTCAArchitecture(at path: String, deep: Bool) {
+    private func validateTCAArchitecture(at path: String, deep: Bool, level: String, format: String, configPath: String?) {
         // Check if smith-validation is available
         guard checkSmithValidationAvailable() else {
             print("❌ smith-validation not found. Install with:")
@@ -203,31 +211,239 @@ struct Validate: ParsableCommand {
             return
         }
 
-        // Call smith-validation as a subprocess
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/local/bin/smith-validation")
-
-        var arguments = ["validate", path]
+        // Build smith-validation command with new AI-optimized arguments
+        var arguments = [path, "--level=\(level)", "--format=\(format)"]
         if deep {
             arguments.append("--deep")
         }
+        if let configPath = configPath {
+            arguments.append("--config=\(configPath)")
+        }
 
+        print("🔍 Analyzing project with AI-Optimized TCA Validation...")
+        print("📊 Level: \(level.capitalized) | Format: \(format.capitalized)")
+
+        // Call smith-validation as subprocess (consistent with other Smith tools)
+        // Find smith-validation in PATH
+        let smithValidationPath = findSmithValidationPath()
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: smithValidationPath)
         process.arguments = arguments
+
+        let outputPipe = Pipe()
+        let errorPipe = Pipe()
+        process.standardOutput = outputPipe
+        process.standardError = errorPipe
 
         do {
             try process.run()
             process.waitUntilExit()
 
+            // Read and process AI-optimized output
+            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            let output = String(data: outputData, encoding: .utf8) ?? ""
+
             if process.terminationStatus == 0 {
-                print("✅ TCA validation completed successfully")
+                // Process AI-optimized output based on format
+                if format.lowercased() == "json" {
+                    // Pass through AI-optimized JSON directly
+                    print(output)
+                } else {
+                    // Enhance summary output with AI-optimized processing
+                    processAIOptimizedSummary(output, level: level, success: true)
+                }
             } else {
+                // Read error output
+                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+                let errorOutput = String(data: errorData, encoding: .utf8) ?? "Unknown error"
+
                 print("⚠️  TCA validation completed with issues")
+                if !errorOutput.isEmpty {
+                    print("Error details: \(errorOutput)")
+                }
+
+                // Still try to process any partial output
+                if !output.isEmpty && format.lowercased() == "summary" {
+                    processAIOptimizedSummary(output, level: level, success: false)
+                }
             }
         } catch {
             print("❌ Failed to run smith-validation: \(error)")
             print("💡 Make sure smith-validation is installed and in PATH")
         }
     }
+
+    private func processAIOptimizedSummary(_ output: String, level: String, success: Bool) {
+        // Try to parse as JSON to extract AI-optimized insights
+        if let jsonData = output.data(using: .utf8),
+           let aiResult = try? JSONDecoder().decode(AIOptimizedValidationResult.self, from: jsonData) {
+
+            // Display enhanced AI-optimized summary
+            print("")
+            print("🔍 AI-OPTIMIZED ANALYSIS SUMMARY")
+            print("================================")
+            print("Project: \(URL(fileURLWithPath: aiResult.projectPath).lastPathComponent)")
+            print("Level: \(level.capitalized)")
+            print("Status: \(success ? "✅ Success" : "⚠️ Issues Found")")
+            print("")
+
+            print("📊 ARCHITECTURAL HEALTH")
+            print("=======================")
+            print("Health Score: \(aiResult.summary.healthScore)/100")
+            print("Files Analyzed: \(aiResult.summary.totalFiles)")
+            print("Violations Found: \(aiResult.summary.violationsCount)")
+
+            if !aiResult.findings.isEmpty {
+                print("")
+                print("🚨 VIOLATIONS BREAKDOWN")
+                print("=======================")
+                let criticalCount = aiResult.findings.filter { $0.severity == "critical" }.count
+                let highCount = aiResult.findings.filter { $0.severity == "high" }.count
+                let mediumCount = aiResult.findings.filter { $0.severity == "medium" }.count
+                let lowCount = aiResult.findings.filter { $0.severity == "low" }.count
+
+                if criticalCount > 0 { print("Critical: \(criticalCount)") }
+                if highCount > 0 { print("High: \(highCount)") }
+                if mediumCount > 0 { print("Medium: \(mediumCount)") }
+                if lowCount > 0 { print("Low: \(lowCount)") }
+            }
+
+            print("")
+            print("🤖 AI INSIGHTS")
+            print("================")
+            print("Automatable Fixes: \(aiResult.summary.automation.automatableFixes)")
+            print("Automation Confidence: \(String(format: "%.1f", aiResult.summary.automation.averageConfidence * 100))%")
+            print("Efficiency Score: \(String(format: "%.1f", aiResult.efficiency.overallScore * 100))%")
+
+            if !aiResult.actionableInsights.isEmpty {
+                print("")
+                print("🎯 AI RECOMMENDATIONS")
+                print("=======================")
+                for insight in aiResult.actionableInsights where insight.actionable {
+                    print("• \(insight.title): \(insight.description)")
+                    if insight.estimatedEffort > 0 {
+                        print("   🕒 Estimated effort: \(insight.estimatedEffort) minutes")
+                    }
+                }
+            }
+
+            if !aiResult.aiRecommendations.isEmpty {
+                print("")
+                print("💡 PRIORITY ACTIONS")
+                print("===================")
+                for recommendation in aiResult.aiRecommendations {
+                    print("• \(recommendation.title): \(recommendation.description)")
+                    for step in recommendation.implementationSteps {
+                        print("   → \(step)")
+                    }
+                }
+            }
+        } else {
+            // Fallback to original output if JSON parsing fails
+            print(output)
+        }
+    }
+}
+
+// MARK: - AI-Optimized JSON Structures
+
+struct AIOptimizedValidationResult: Codable {
+    let analysisType: String
+    let projectPath: String
+    let summary: AIOptimizedSummary
+    let findings: [AIOptimizedFinding]
+    let actionableInsights: [AIOptimizedInsight]
+    let aiRecommendations: [AIOptimizedRecommendation]
+    let efficiency: AIOptimizedEfficiency
+}
+
+struct AIOptimizedSummary: Codable {
+    let totalFiles: Int
+    let violationsCount: Int
+    let healthScore: Int
+    let automation: AIOptimizedAutomation
+}
+
+struct AIOptimizedAutomation: Codable {
+    let automatableFixes: Int
+    let averageConfidence: Double
+}
+
+struct AIOptimizedFinding: Codable {
+    let severity: String
+}
+
+struct AIOptimizedInsight: Codable {
+    let title: String
+    let description: String
+    let actionable: Bool
+    let estimatedEffort: Int
+}
+
+struct AIOptimizedRecommendation: Codable {
+    let title: String
+    let description: String
+    let implementationSteps: [String]
+}
+
+struct AIOptimizedEfficiency: Codable {
+    let overallScore: Double
+}
+
+// MARK: - Helper Functions
+
+private func findSmithValidationPath() -> String {
+    // Try common paths where smith-validation might be installed
+    let commonPaths = [
+        "/opt/homebrew/bin/smith-validation",  // Apple Silicon Macs
+        "/usr/local/bin/smith-validation",     // Intel Macs
+        "~/.local/bin/smith-validation",      // User local installation
+        "/usr/bin/smith-validation"           // System installation
+    ]
+
+    // Try PATH first
+    if let path = which("smith-validation") {
+        return path
+    }
+
+    // Fall back to common paths
+    for path in commonPaths {
+        let expandedPath = NSString(string: path).expandingTildeInPath
+        if FileManager.default.fileExists(atPath: expandedPath) {
+            return expandedPath
+        }
+    }
+
+    // Default to /usr/local/bin/smith-validation for backward compatibility
+    return "/usr/local/bin/smith-validation"
+}
+
+private func which(_ command: String) -> String? {
+    let process = Process()
+    process.executableURL = URL(fileURLWithPath: "/usr/bin/which")
+    process.arguments = [command]
+
+    let pipe = Pipe()
+    process.standardOutput = pipe
+
+    do {
+        try process.run()
+        process.waitUntilExit()
+
+        if process.terminationStatus == 0 {
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            let path = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+            return path?.isEmpty == false ? path : nil
+        }
+        return nil
+    } catch {
+        return nil
+    }
+}
+
+private func checkSmithValidationAvailable() -> Bool {
+    let path = findSmithValidationPath()
+    return FileManager.default.fileExists(atPath: path)
 }
 
 // MARK: - Optimize Command
@@ -345,22 +561,6 @@ private func formatBuildSystem(_ system: Any) -> String {
     return "Detected"
 }
 
-private func checkSmithValidationAvailable() -> Bool {
-    let process = Process()
-    process.executableURL = URL(fileURLWithPath: "/usr/bin/which")
-    process.arguments = ["smith-validation"]
-
-    let pipe = Pipe()
-    process.standardOutput = pipe
-
-    do {
-        try process.run()
-        process.waitUntilExit()
-        return process.terminationStatus == 0
-    } catch {
-        return false
-    }
-}
 
 // MARK: - Xcode Rebuild Command (moved from smith-xcsift)
 

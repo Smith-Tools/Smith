@@ -14,7 +14,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/Smith-Tools/smith-core", from: "1.0.0"),
-        .package(url: "https://github.com/Smith-Tools/smith-validation", from: "1.0.6"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0")
     ],
     targets: [
@@ -22,9 +21,6 @@ let package = Package(
             name: "SmithCLI",
             dependencies: [
                 .product(name: "SmithCore", package: "smith-core"),
-                .product(name: "SmithValidationCore", package: "smith-validation"),
-                .product(name: "SmithValidation", package: "smith-validation"),
-                .product(name: "MaxwellsTCARules", package: "smith-validation"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]
         ),

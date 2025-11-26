@@ -30,8 +30,11 @@ This installs:
 # Analyze your project
 smith analyze /path/to/project
 
-# Validate TCA architecture
-smith validate --tca
+# Validate TCA architecture with AI-optimized analysis
+smith validate /path/to/project --level=critical --format=json
+
+# Comprehensive architectural analysis
+smith validate /path/to/project --level=comprehensive --format=summary
 
 # Use in Claude Code
 # Type: "@smith validate my code"
@@ -53,11 +56,13 @@ Interactive architectural guidance in Claude Code:
 
 ### 2. Command Line Tool
 
-For automation and CI/CD:
+For automation and CI/CD with AI-optimized analysis:
 
 ```bash
 smith analyze /path/to/project
-smith validate --tca
+smith validate /path/to/project --level=critical --format=json
+smith validate /path/to/project --level=standard --format=summary
+smith validate /path/to/project --level=comprehensive --format=json
 smith optimize
 ```
 
@@ -166,12 +171,14 @@ swift build 2>&1 | smith-sbsift monitor --eta --hang-detection
 ```
 
 ### Phase 3: Code Review
-**Tools**: `smith`, `smith-skill`
+**Tools**: `smith`, `smith-skill`, `smith-validation`
 
-Architectural validation against TCA rules, anti-pattern detection, pattern guidance.
+AI-optimized architectural validation against TCA rules, anti-pattern detection, pattern guidance with progressive intelligence.
 
 ```bash
-smith validate --tca
+smith validate /path/to/project --level=critical --format=json
+smith validate /path/to/project --level=standard --format=summary
+smith validate /path/to/project --level=comprehensive --format=json
 # or use Smith skill in Claude Code
 ```
 
@@ -235,8 +242,10 @@ Maxwell teaches pattern → You implement → Smith validates
 # Comprehensive analysis
 smith analyze /path/to/project
 
-# TCA validation
-smith validate --tca
+# AI-optimized TCA validation with progressive intelligence
+smith validate /path/to/project --level=critical --format=json
+smith validate /path/to/project --level=standard --format=summary
+smith validate /path/to/project --level=comprehensive --format=json
 
 # Performance suggestions
 smith optimize
