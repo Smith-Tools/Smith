@@ -9,10 +9,23 @@ tags:
   - "code analysis"
 triggers:
   - "Smith"
-  - "architecture"
-  - "validation"
-  - "build"
-  - "code analysis"
+  - "smith-validation"
+  - "code review"
+  - "xcodebuild"
+  - "swift build"
+  - "build failed"
+  - "build hang"
+  - "build stuck"
+  - "compilation error"
+  - "type inference"
+  - "circular dependency"
+  - "TCA reducer"
+  - "@Reducer"
+  - "smith-xcsift"
+  - "smith-sbsift"
+  - "xcworkspace"
+  - "workspace"
+  - "architecture validation"
 allowed-tools:
   - Read
   - Glob

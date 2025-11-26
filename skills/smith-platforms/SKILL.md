@@ -12,14 +12,23 @@ tags:
   - "platform patterns"
 triggers:
   - "visionOS"
+  - "RealityKit"
+  - "RealityView"
+  - "PresentationComponent"
+  - "spatial computing"
   - "iOS"
   - "macOS"
   - "iPadOS"
-  - "RealityKit"
+  - "platform-specific"
   - "UIKit"
   - "AppKit"
-  - "platform"
-  - "spatial"
+  - "SwiftUI on iOS"
+  - "SwiftUI on macOS"
+  - "ARView"
+  - "Model3D"
+  - "platform abstraction"
+  - "cross-platform"
+  - "conditional compilation"
 allowed-tools:
   - Read
   - Glob

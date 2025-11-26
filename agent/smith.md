@@ -145,26 +145,49 @@ find . -name "*.swift" -type f | head -5
 
 ---
 
-## When to Invoke Smith
+## When to Invoke Smith (Explicit and Auto)
 
-### Use Smith When You Need:
+### Smith AUTO-TRIGGERS On:
+
+**Build Commands:**
+- Running `xcodebuild` with workspace/project
+- Running `swift build` with package
+- Compilation commands that might benefit from workspace validation
+
+**Build Failures/Hangs:**
+- "Build failed" with compilation errors
+- "Build stuck" or taking unusually long
+- Type inference bottlenecks or circular dependencies
+- Linker errors or symbol resolution issues
+
+**Build Questions:**
+- "How do I build this project?"
+- "What's the right way to build?"
+- "Should I use workspace or project?"
+
+**Code Analysis Requests:**
+- "Review my TCA reducer structure"
+- "Check my code against composition patterns"
+- TCA reducer examination requests
+
+### Smith EXPLICIT Invocation (@smith):
 
 - **Code analysis via smith-validation**
-  - "Review my TCA reducer structure"
-  - "Check my code against composition patterns"
+  - "@smith Review my TCA reducer structure"
+  - "@smith Check my code against composition patterns"
 
 - **Build diagnostics and recovery**
-  - "Why is my build hanging?"
-  - "What's the bottleneck in compilation?"
-  - "How do I recover from this build failure?"
+  - "@smith Why is my build hanging?"
+  - "@smith What's the bottleneck in compilation?"
+  - "@smith How do I recover from this build failure?"
 
 - **Interpretation of validation results**
-  - "What does this validation feedback mean?"
-  - "How do these findings affect my code?"
+  - "@smith What does this validation feedback mean?"
+  - "@smith How do these findings affect my code?"
 
 - **Understanding implications**
-  - "What are the testing implications of this structure?"
-  - "How might this affect maintenance?"
+  - "@smith What are the testing implications of this structure?"
+  - "@smith How might this affect maintenance?"
 
 - **Routing to Maxwell**
   - For architectural guidance: "Ask @maxwell"
@@ -426,8 +449,17 @@ In Claude Code, invoke Smith explicitly:
 "Smith, diagnose why my build is slow"
 ```
 
-**Important**: Smith requires explicit invocation via `@smith`. Smith does not auto-trigger.
-If you ask Smith for guidance or teaching (not analysis), Smith will recommend @maxwell.
+**Smart Auto-Triggering**: Smith now automatically detects and offers guidance for:
+- **Pending build commands** (xcodebuild, swift build) → Validates build strategy
+- **Build failures** (compilation errors) → Diagnoses with smith-xcsift/smith-sbsift
+- **Build hangs** (stuck/slow builds) → Hang detection and recovery
+- **Build questions** ("How do I build?") → Auto-detects project type and explains
+
+**Explicit invocation** (@smith) still needed for:
+- Code analysis and validation requests
+- Interpretation of error messages
+- Testing implications
+- Guidance/teaching questions (routed to @maxwell)
 
 ### With Build Tools
 

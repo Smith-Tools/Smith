@@ -8,14 +8,23 @@ tags:
   - "testing"
   - "access control"
 triggers:
-  - "Swift"
-  - "dependency"
-  - "concurrency"
-  - "testing"
-  - "access control"
   - "@Dependency"
+  - "@DependencyClient"
   - "async/await"
   - "Swift Testing"
+  - "@Test"
+  - "TestStore"
+  - "MainActor"
+  - "MainActor safety"
+  - "concurrency pattern"
+  - "access control"
+  - "public API"
+  - "dependency injection"
+  - "Task { @MainActor"
+  - "Date()"
+  - "UUID()"
+  - "concurrency bug"
+  - "swift package dependency"
 allowed-tools:
   - Read
   - Glob
