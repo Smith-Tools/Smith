@@ -16,17 +16,28 @@ Smith's philosophy: **strict analysis of the construction process, not just chec
 
 ## Quick Start: 3 Ways to Use Smith
 
-### 1. **Use Smith Skill in Claude Code** (Recommended)
-For architectural validation while coding:
+### 1. **Use Smith in Claude Code** (Recommended)
+For architectural validation and build diagnostics while coding:
+
+**Explicit invocation** (primary):
 ```
-"Use smith-skill for my TCA code"
-"Check if my reducer violates TCA composition rules"
+"@smith validate my TCA reducer"
+"@smith check if this violates composition rules"
+"@smith should I use workspace or project?"
+"@smith why is my build hanging?"
 ```
 
-The skill auto-triggers on:
-- TCA patterns (`@Reducer`, `CombineReducers`, `Reducer`)
-- Architecture keywords (`monolithic`, `coupling`, `testability`)
-- Swift patterns (`@State`, `async/await`, dependency injection)
+**Proactive interception** (secondary):
+Smith automatically intercepts when you run build commands:
+- `xcodebuild -workspace MyApp.xcworkspace -scheme MyApp`
+- `swift build`
+- Build failures and errors
+
+Smith will:
+1. Detect your project type (workspace/project/package)
+2. Validate your build command
+3. Warn of issues (e.g., using .xcodeproj when .xcworkspace exists)
+4. Recommend piping to analysis tools
 
 ### 2. **Use Smith CLI for Automated Analysis**
 ```bash
@@ -58,20 +69,27 @@ smith-xcsift rebuild --smart-strategy
 
 ## Core Concepts
 
-### Smith's Three Phases
+### Smith's Architecture
 
-1. **Build Phase**: Real-time monitoring
-   - `smith-sbsift` - Swift build output analysis
-   - `smith-spmsift` - SPM dependency analysis
-   - `smith-xcsift` - Xcode project analysis
+**Single Coordinator Agent** with two modes:
 
-2. **Code Review Phase**: Static architecture validation
-   - `smith-validation` - TCA rules and patterns
-   - `smith-skill` - Claude Code integration
+1. **Explicit Invocation** (@smith)
+   - Code analysis: `@smith validate my code`
+   - Build diagnostics: `@smith diagnose my build`
+   - Project detection: `@smith should I build workspace or project?`
+   - Result interpretation: `@smith what does this mean?`
 
-3. **Recovery Phase**: Intelligent rebuild strategies
-   - `smith-xcsift rebuild` - Smart recovery
-   - Hang detection and diagnostics
+2. **Proactive Interception**
+   - Detects build commands (xcodebuild, swift build)
+   - Runs project type detection
+   - Validates command matches project type
+   - Warns of issues before execution
+
+**Ecosystem Tools** (called by Smith):
+- `smith-sbsift` - Swift build output analysis
+- `smith-spmsift` - SPM dependency analysis
+- `smith-xcsift` - Xcode project analysis
+- `smith-validation` - TCA rules and patterns
 
 ### TCA Rules (Rules 1.1-1.5)
 

@@ -42,40 +42,62 @@ smith validate /path/to/project --level=comprehensive --format=summary
 
 ---
 
-## Three Ways to Use Smith
+## How to Use Smith
 
-### 1. Claude Code Skill (Recommended)
+### 1. Explicit Invocation in Claude Code (Primary)
 
-Interactive architectural guidance in Claude Code:
+Always explicitly invoke Smith for analysis and diagnostics:
 
 ```
-"@smith check my TCA reducer"
-"Validate my code against Smith rules"
-"Smith, diagnose my build issue"
+"@smith validate my TCA reducer"
+"@smith check my code against composition rules"
+"@smith why is my build hanging?"
+"@smith should I use workspace or project?"
 ```
 
-### 2. Command Line Tool
+### 2. Proactive Build Interception (Secondary)
 
-For automation and CI/CD with AI-optimized analysis:
+Smith automatically intercepts when you run build commands:
+
+```bash
+xcodebuild -workspace MyApp.xcworkspace -scheme MyApp
+# Smith detects → validates → warns of issues → recommends piping to tools
+
+swift build
+# Smith detects → validates project type → offers analysis
+```
+
+When interception happens, Smith:
+1. **Detects project type** (workspace/project/package/swift)
+2. **Validates command** matches project type
+3. **Warns of issues** (e.g., using .xcodeproj when .xcworkspace exists)
+4. **Recommends piping** to analysis tools for detailed output
+
+### 3. Build Monitoring Tools
+
+For detailed build analysis and recovery:
+
+```bash
+# Swift builds with analysis
+swift build 2>&1 | smith-sbsift parse --format json
+
+# Xcode analysis and recovery
+smith-xcsift analyze
+smith-xcsift rebuild --smart-strategy
+
+# Package analysis
+smith-spmsift analyze --metrics
+```
+
+### 4. Command Line Analysis
+
+For automation and CI/CD:
 
 ```bash
 smith analyze /path/to/project
-smith validate /path/to/project --level=critical --format=json
-smith validate /path/to/project --level=standard --format=summary
-smith validate /path/to/project --level=comprehensive --format=json
+smith validate /path/to/project --level=critical
+smith validate /path/to/project --level=comprehensive
 smith optimize
-```
-
-### 3. Build Integration
-
-Real-time monitoring during builds:
-
-```bash
-# Swift builds
-swift build 2>&1 | smith-sbsift analyze --hang-detection
-
-# Xcode builds
-smith-xcsift rebuild --smart-strategy
 ```
 
 ---
