@@ -1,6 +1,9 @@
 import Foundation
 import ArgumentParser
-import SmithCore
+import SmithBuildAnalysis
+import SmithOutputFormatter
+import SmithErrorHandling
+import SmithProgress
 
 @main
 struct SmithCLI: ParsableCommand {
@@ -13,7 +16,7 @@ struct SmithCLI: ParsableCommand {
         to provide comprehensive build analysis, hang detection, and optimization
         recommendations for Swift projects.
         """,
-        version: "1.1.0",
+        version: "1.2.0",
         subcommands: [
             Analyze.self,
             Detect.self,
@@ -23,7 +26,14 @@ struct SmithCLI: ParsableCommand {
             Environment.self,
             MonitorBuild.self,
             Version.self,
-            // Xcode-specific commands (moved from smith-xcsift)
+            SmartAnalyze.self,
+            // New wrapper subcommands
+            Validation.self,
+            Xcode.self,
+            Swift.self,
+            SPM.self,
+            TCA.self,
+            // Legacy Xcode-specific commands (moved from smith-xcsift)
             Rebuild.self,
             Clean.self,
             XcodeAnalyze.self,
@@ -31,6 +41,25 @@ struct SmithCLI: ParsableCommand {
             Diagnose.self
         ]
     )
+
+    func run() throws {
+        // Check required dependencies on startup
+        let requirements: [ToolRequirement] = [
+            SwiftRequirement(),
+            XcodeBuildRequirement(),
+            GitRequirement()
+        ]
+
+        let missing = RequirementChecker.check(requirements)
+        
+        if !missing.fatal.isEmpty || !missing.warnings.isEmpty {
+            RequirementChecker.showRequirementsReport(missing)
+        }
+
+        if !missing.fatal.isEmpty {
+            throw ExitCode.failure
+        }
+    }
 }
 
 // MARK: - Analyze Command
@@ -225,7 +254,10 @@ struct Validate: ParsableCommand {
 
         // Call smith-validation as subprocess (consistent with other Smith tools)
         // Find smith-validation in PATH
-        let smithValidationPath = findSmithValidationPath()
+        guard let smithValidationPath = findSmithValidationPath() else {
+            print("❌ smith-validation not found in PATH")
+            return
+        }
         let process = Process()
         process.executableURL = URL(fileURLWithPath: smithValidationPath)
         process.arguments = arguments
@@ -392,58 +424,11 @@ struct AIOptimizedEfficiency: Codable {
 
 // MARK: - Helper Functions
 
-private func findSmithValidationPath() -> String {
-    // Try common paths where smith-validation might be installed
-    let commonPaths = [
-        "/opt/homebrew/bin/smith-validation",  // Apple Silicon Macs
-        "/usr/local/bin/smith-validation",     // Intel Macs
-        "~/.local/bin/smith-validation",      // User local installation
-        "/usr/bin/smith-validation"           // System installation
-    ]
-
-    // Try PATH first
-    if let path = which("smith-validation") {
-        return path
-    }
-
-    // Fall back to common paths
-    for path in commonPaths {
-        let expandedPath = NSString(string: path).expandingTildeInPath
-        if FileManager.default.fileExists(atPath: expandedPath) {
-            return expandedPath
-        }
-    }
-
-    // Default to /usr/local/bin/smith-validation for backward compatibility
-    return "/usr/local/bin/smith-validation"
-}
-
-private func which(_ command: String) -> String? {
-    let process = Process()
-    process.executableURL = URL(fileURLWithPath: "/usr/bin/which")
-    process.arguments = [command]
-
-    let pipe = Pipe()
-    process.standardOutput = pipe
-
-    do {
-        try process.run()
-        process.waitUntilExit()
-
-        if process.terminationStatus == 0 {
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            let path = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
-            return path?.isEmpty == false ? path : nil
-        }
-        return nil
-    } catch {
-        return nil
-    }
-}
-
 private func checkSmithValidationAvailable() -> Bool {
-    let path = findSmithValidationPath()
-    return FileManager.default.fileExists(atPath: path)
+    if let path = findSmithValidationPath() {
+        return FileManager.default.fileExists(atPath: path)
+    }
+    return false
 }
 
 // MARK: - Optimize Command
@@ -653,7 +638,13 @@ struct Rebuild: ParsableCommand {
         // Check workspace first
         if let workspace = workspace {
             guard FileManager.default.fileExists(atPath: workspace) else {
-                throw ValidationError.invalidPath(workspace)
+                throw SmithErrorHandling.ValidationError(
+                    code: "SMITH_VAL_004",
+                    message: "Path does not exist: \(workspace)",
+                    technicalDetails: "Directory validation failed at path: \(workspace)",
+                    suggestedActions: ["Verify the path is correct", "Check directory permissions"],
+                    isFatal: true
+                )
             }
             return workspace
         }
@@ -661,7 +652,13 @@ struct Rebuild: ParsableCommand {
         // Check project
         if let project = project {
             guard FileManager.default.fileExists(atPath: project) else {
-                throw ValidationError.invalidPath(project)
+                throw SmithErrorHandling.ValidationError(
+                    code: "SMITH_VAL_004",
+                    message: "Path does not exist: \(project)",
+                    technicalDetails: "Directory validation failed at path: \(project)",
+                    suggestedActions: ["Verify the path is correct", "Check directory permissions"],
+                    isFatal: true
+                )
             }
             return project
         }
@@ -679,7 +676,13 @@ struct Rebuild: ParsableCommand {
             return project
         }
 
-        throw ValidationError.validationFailed("No Xcode project or workspace found in current directory")
+        throw SmithErrorHandling.ValidationError(
+            code: "SMITH_VAL_001",
+            message: "No Xcode project or workspace found in current directory",
+            technicalDetails: "Auto-detection failed to find .xcworkspace or .xcodeproj in: \(currentDir)",
+            suggestedActions: ["Navigate to your Xcode project directory", "Use --project or --workspace flags to specify the path"],
+            isFatal: true
+        )
     }
 
     private func buildXcodeCommand(projectPath: String) throws -> [String] {
@@ -934,14 +937,26 @@ struct XcodeMonitor: ParsableCommand {
         // Check for explicit user specification first
         if let workspace = workspace {
             guard FileManager.default.fileExists(atPath: workspace) else {
-                throw ValidationError.invalidPath(workspace)
+                throw SmithErrorHandling.ValidationError(
+                    code: "SMITH_VAL_004",
+                    message: "Path does not exist: \(workspace)",
+                    technicalDetails: "Directory validation failed at path: \(workspace)",
+                    suggestedActions: ["Verify the path is correct", "Check directory permissions"],
+                    isFatal: true
+                )
             }
             return workspace
         }
 
         if let project = project {
             guard FileManager.default.fileExists(atPath: project) else {
-                throw ValidationError.invalidPath(project)
+                throw SmithErrorHandling.ValidationError(
+                    code: "SMITH_VAL_004",
+                    message: "Path does not exist: \(project)",
+                    technicalDetails: "Directory validation failed at path: \(project)",
+                    suggestedActions: ["Verify the path is correct", "Check directory permissions"],
+                    isFatal: true
+                )
             }
             return project
         }
@@ -959,7 +974,13 @@ struct XcodeMonitor: ParsableCommand {
             return xcodeproj
         }
 
-        throw ValidationError.validationFailed("No Xcode project or workspace found in current directory")
+        throw SmithErrorHandling.ValidationError(
+            code: "SMITH_VAL_001",
+            message: "No Xcode project or workspace found in current directory",
+            technicalDetails: "Auto-detection failed to find .xcworkspace or .xcodeproj in: \(currentDir)",
+            suggestedActions: ["Navigate to your Xcode project directory", "Use --project or --workspace flags to specify the path"],
+            isFatal: true
+        )
     }
 
     private func buildXcodeCommand(projectPath: String) throws -> [String] {
@@ -1089,18 +1110,3 @@ private func findXcodeProject(in directory: String) -> String? {
     return nil
 }
 
-// MARK: - Error Types
-
-enum ValidationError: Error, LocalizedError {
-    case invalidPath(String)
-    case validationFailed(String)
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidPath(let path):
-            return "Invalid path: \(path)"
-        case .validationFailed(let reason):
-            return "Validation failed: \(reason)"
-        }
-    }
-}

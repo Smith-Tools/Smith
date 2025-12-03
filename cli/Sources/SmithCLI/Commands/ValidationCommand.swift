@@ -1,5 +1,8 @@
 import Foundation
 import ArgumentParser
+import SmithOutputFormatter
+import SmithErrorHandling
+import SmithProgress
 
 // MARK: - Validation Wrapper Command
 
@@ -35,14 +38,14 @@ struct Validation: ParsableCommand {
     var configPath: String?
 
     func run() throws {
-        let output = CLIOutput(format: .auto)
+        let output = SmithCLIOutput()
         output.section("TCA ARCHITECTURAL VALIDATION")
 
         let resolvedPath = (path as NSString).standardizingPath
         output.info("Project: \(URL(fileURLWithPath: resolvedPath).lastPathComponent)")
         output.info("Level: \(level.capitalized)")
         output.info("Format: \(format.capitalized)")
-        
+
         if deep {
             output.info("Deep validation: Enabled")
         }
@@ -52,18 +55,23 @@ struct Validation: ParsableCommand {
 
         // Check if smith-validation is available
         guard let validationPath = findSmithValidationPath() else {
-            let error = ToolError.toolNotFound(toolName: "smith-validation")
-            ErrorDisplayManager.displayError(error, format: .json) // Use JSON format for error reporting
+            let error = SmithErrorHandling.ResourceError(
+                code: "SMITH_TOOL_001",
+                message: "smith-validation tool not found",
+                technicalDetails: "Could not locate smith-validation in PATH or common installation directories",
+                suggestedActions: ["Install smith-validation using: brew install smith-tools", "Check that smith-validation is in your PATH"],
+                isFatal: true
+            )
+            SmithErrorDisplay.display(error, format: .human)
             throw ExitCode.failure
         }
 
         output.info("Running TCA validation...")
 
         // Use progress indicator for better UX in TTY environments
-        var progress: ProgressIndicator?
+        let progress = SmithProgress()
         if isatty(STDOUT_FILENO) != 0 {
-            progress = ProgressIndicator(formatter: OutputFormatter())
-            progress?.start(title: "Validating TCA architecture")
+            progress.start(title: "Validating TCA architecture", style: .spinner)
         }
 
         // Build smith-validation command arguments
@@ -77,13 +85,13 @@ struct Validation: ParsableCommand {
 
         // Execute smith-validation
         let result = try executeSmithValidation(path: validationPath, arguments: arguments)
-        
-        progress?.finish(message: "TCA validation completed", success: result.success)
-        
+
+        progress.finish(success: result.success, finalMessage: "TCA validation completed")
+
         // Handle output based on format with TTY awareness
-        let outputFormatter = OutputFormatter()
-        let resolvedFormat: OutputFormatter.Format
-        
+        let outputFormatter = SmithOutputFormatter()
+        let resolvedFormat: SmithOutputFormatter.Format
+
         switch format.lowercased() {
         case "json": resolvedFormat = .json
         case "summary": resolvedFormat = .summary
@@ -92,13 +100,13 @@ struct Validation: ParsableCommand {
         case "minimal": resolvedFormat = .minimal
         default: resolvedFormat = .auto
         }
-        
+
         if resolvedFormat == .json || resolvedFormat == .auto && !outputFormatter.isTTY {
             // Pass through JSON directly
             print(result.output)
         } else {
             // Process summary format with enhanced output
-            processSummaryOutput(result.output, level: level, success: result.success, formatter: outputFormatter)
+            processSummaryOutput(result.output, level: level, success: result.success)
         }
 
         if !result.success {
@@ -134,7 +142,7 @@ struct Validation: ParsableCommand {
         }
     }
 
-    private func processSummaryOutput(_ output: String, level: String, success: Bool, formatter: OutputFormatter) {
+    private func processSummaryOutput(_ output: String, level: String, success: Bool) {
         print("")
         print("📋 VALIDATION SUMMARY")
         print("====================")
@@ -175,29 +183,6 @@ struct Validation: ParsableCommand {
         }
     }
 
-    private func findSmithValidationPath() -> String? {
-        // Try PATH first
-        if let path = which("smith-validation") {
-            return path
-        }
-
-        // Try common installation paths
-        let commonPaths = [
-            "/opt/homebrew/bin/smith-validation",  // Apple Silicon
-            "/usr/local/bin/smith-validation",     // Intel
-            "~/.local/bin/smith-validation",       // User local
-            "/usr/bin/smith-validation"            // System
-        ]
-
-        for path in commonPaths {
-            let expandedPath = NSString(string: path).expandingTildeInPath
-            if FileManager.default.fileExists(atPath: expandedPath) {
-                return expandedPath
-            }
-        }
-
-        return nil
-    }
 }
 
 // MARK: - JSON Response Structures
@@ -223,27 +208,4 @@ struct ValidationFinding: Codable {
     let rule: String?
 }
 
-// MARK: - Helper Functions
-
-private func which(_ command: String) -> String? {
-    let process = Process()
-    process.executableURL = URL(fileURLWithPath: "/usr/bin/which")
-    process.arguments = [command]
-
-    let pipe = Pipe()
-    process.standardOutput = pipe
-
-    do {
-        try process.run()
-        process.waitUntilExit()
-
-        if process.terminationStatus == 0 {
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            let path = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
-            return path?.isEmpty == false ? path : nil
-        }
-        return nil
-    } catch {
-        return nil
-    }
-}
+// Note: Helper functions 'which()' and 'findSmith*' are now in Utilities.swift
