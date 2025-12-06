@@ -332,48 +332,8 @@ struct DependenciesCommand: ParsableCommand {
             print("🔧 Analyzing Xcode dependencies...")
         }
 
-        // Use smith-xcsift if available, otherwise do basic analysis
-        if let xcsiftPath = findSmithXCSiftPath() {
-            var arguments = ["analyze"]
-
-            // Add format-specific arguments
-            if tree { arguments.append("--tree") }
-            if circular { arguments.append("--circular") }
-            if !format.isEmpty && format != "summary" { arguments.append("--format=\(format)") }
-
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: xcsiftPath)
-            process.arguments = arguments
-
-            let outputPipe = Pipe()
-            let errorPipe = Pipe()
-            process.standardOutput = outputPipe
-            process.standardError = errorPipe
-
-            try process.run()
-            process.waitUntilExit()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: outputData, encoding: .utf8) ?? ""
-
-            if process.terminationStatus == 0 {
-                if !output.isEmpty {
-                    print(output)
-                }
-            } else {
-                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                let errorOutput = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                print("⚠️  Xcode dependency analysis failed: \(errorOutput)")
-
-                // Fall back to basic analysis
-                performBasicXcodeDependencyAnalysis(at: path)
-            }
-        } else {
-            if verbose {
-                print("⚠️  smith-xcsift not found, using basic analysis")
-            }
-            performBasicXcodeDependencyAnalysis(at: path)
-        }
+        // Perform basic Xcode dependency analysis
+        performBasicXcodeDependencyAnalysis(at: path)
     }
 
     private func analyzeSPMDependencies(at path: String) throws {
@@ -381,51 +341,8 @@ struct DependenciesCommand: ParsableCommand {
             print("🔧 Analyzing Swift Package dependencies...")
         }
 
-        // Check if smith-spmsift is available
-        if let spmsiftPath = findSmithSPMSiftPath() {
-            var arguments = ["dependencies", path]
-
-            // Add format-specific arguments
-            if tree { arguments.append("--tree") }
-            if outdated { arguments.append("--outdated") }
-            if conflicts { arguments.append("--conflicts") }
-            if !format.isEmpty && format != "summary" { arguments.append("--format=\(format)") }
-
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: spmsiftPath)
-            process.arguments = arguments
-
-            let outputPipe = Pipe()
-            let errorPipe = Pipe()
-            process.standardOutput = outputPipe
-            process.standardError = errorPipe
-
-            try process.run()
-            process.waitUntilExit()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: outputData, encoding: .utf8) ?? ""
-
-            if process.terminationStatus == 0 {
-                if !output.isEmpty {
-                    print(output)
-                } else {
-                    print("✅ No Swift Package dependencies found")
-                }
-            } else {
-                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                let errorOutput = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                print("⚠️  Swift Package dependency analysis failed: \(errorOutput)")
-
-                // Fall back to basic analysis
-                performBasicSPMDependencyAnalysis(at: path)
-            }
-        } else {
-            if verbose {
-                print("⚠️  smith-spmsift not found, using basic analysis")
-            }
-            performBasicSPMDependencyAnalysis(at: path)
-        }
+        // Perform basic SPM dependency analysis
+        performBasicSPMDependencyAnalysis(at: path)
     }
 
     private func performBasicXcodeDependencyAnalysis(at path: String) {

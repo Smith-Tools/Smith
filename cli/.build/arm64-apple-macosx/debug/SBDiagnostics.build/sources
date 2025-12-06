@@ -1,0 +1,11 @@
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/AutoFixEngine.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/BuildDiagnostics.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/DependencyGraph.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/Formatters/DependencyFormatter.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/HangDetector.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/Models.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/OutputFormatter.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/ProjectDetector.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/SharedMonitor.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/SmithCore.swift
+/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics/Sources/SmithBuildAnalysis/SyntaxValidators.swift

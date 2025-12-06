@@ -21,19 +21,6 @@ func findSmithToolPath(_ toolName: String) -> String? {
     return which(toolName)
 }
 
-/// Find smith-xcsift in common locations
-func findSmithXCSiftPath() -> String? {
-    // Try multiple possible names (Swift Package Manager adds hyphens)
-    if let path = findSmithToolPath("smith-xc-sift") { return path }
-    if let path = findSmithToolPath("smith-xcsift") { return path }
-    return nil
-}
-
-/// Find smith-sbsift in common locations
-func findSmithSBSiftPath() -> String? {
-    findSmithToolPath("smith-sbsift")
-}
-
 /// Find smith-validation in common locations
 func findSmithValidationPath() -> String? {
     findSmithToolPath("smith-validation")
@@ -42,14 +29,6 @@ func findSmithValidationPath() -> String? {
 /// Find smith-tca-trace in common locations
 func findSmithTCATracePath() -> String? {
     findSmithToolPath("smith-tca-trace")
-}
-
-/// Find smith-spmsift in common locations
-func findSmithSPMSiftPath() -> String? {
-    // Try multiple possible names (Swift Package Manager adds hyphens)
-    if let path = findSmithToolPath("smith-spm-sift") { return path }
-    if let path = findSmithToolPath("smith-spmsift") { return path }
-    return nil
 }
 
 /// Find sbparser in common locations

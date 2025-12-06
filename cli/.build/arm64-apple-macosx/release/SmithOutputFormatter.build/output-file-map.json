@@ -1,0 +1,13 @@
+{
+  "": {
+    "dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithOutputFormatter.build/SmithOutputFormatter.d",
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithOutputFormatter.build/SmithOutputFormatter.o",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithOutputFormatter.build/master.swiftdeps"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithOutputFormatter/Sources/SmithOutputFormatter/SmithOutputFormatter.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithOutputFormatter.build/SmithOutputFormatter.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithOutputFormatter.build/SmithOutputFormatter~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithOutputFormatter.build/SmithOutputFormatter.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithOutputFormatter.build/SmithOutputFormatter.dia"
+  }
+}

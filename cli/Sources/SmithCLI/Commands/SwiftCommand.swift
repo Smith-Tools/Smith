@@ -13,11 +13,9 @@ struct Swift: ParsableCommand {
         abstract: "Swift build analysis and parsing tools",
         discussion: """
         Swift-specific tools for build output parsing and analysis.
-        
-        This command provides access to smith-sbsift for Swift build analysis.
-        
+
         Examples:
-          swift build | smith swift parse
+          swift build | smith-parser
           smith swift analyze MyPackage/
           smith swift monitor --target MyTarget
         """

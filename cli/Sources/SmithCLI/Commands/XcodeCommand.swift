@@ -12,9 +12,6 @@ struct Xcode: ParsableCommand {
         discussion: """
         Xcode-specific tools for project analysis, build optimization, and monitoring.
 
-        This command provides a unified interface to Xcode build tools including
-        smith-xcsift for Xcode project analysis.
-
         Examples:
           smith xcode analyze MyApp.xcodeproj
           smith xcode parse build.log

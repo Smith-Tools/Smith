@@ -1,0 +1,33 @@
+{
+  "": {
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/master.swiftdeps"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Tests/SmithCLITests/DocumentationTests/DocCCacheTests.swift": {
+    "dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCCacheTests.d",
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCCacheTests.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCCacheTests~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCCacheTests.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCCacheTests.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Tests/SmithCLITests/DocumentationTests/DocCDiscovererTests.swift": {
+    "dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCDiscovererTests.d",
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCDiscovererTests.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCDiscovererTests~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCDiscovererTests.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/DocCDiscovererTests.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Tests/SmithCLITests/DocumentationTests/SPMCacheFinderTests.swift": {
+    "dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/SPMCacheFinderTests.d",
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/SPMCacheFinderTests.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/SPMCacheFinderTests~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/SPMCacheFinderTests.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/SPMCacheFinderTests.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Tests/SmithCLITests/DocumentationTests/XcodeDocCFinderTests.swift": {
+    "dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/XcodeDocCFinderTests.d",
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/XcodeDocCFinderTests.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/XcodeDocCFinderTests~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/XcodeDocCFinderTests.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLITests.build/XcodeDocCFinderTests.dia"
+  }
+}

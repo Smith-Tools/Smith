@@ -295,6 +295,22 @@ xcodebuild build -scheme MyScheme 2>&1 | xcsift
 - Need device/simulator integration
 - Need full metadata
 
+### Smith Tools - Quick Reference
+
+Smith Tools are available for Swift development tasks. Use this table to find the right tool:
+
+| Problem | Tool | Command |
+|---------|------|---------|
+| Swift `swift build` fails | smith-sbsift | `swift build 2>&1 \| smith-sbsift --format summary` |
+| Xcode `xcodebuild` fails | smith-xcsift | `xcodebuild ... 2>&1 \| smith-xcsift --format summary` |
+| Package/dependency issues | smith-spmsift | `swift package show-dependencies \| smith-spmsift` |
+| TCA reducer or architecture issues | smith-validation | `smith-validation . --level=standard` |
+| Need Apple documentation | sosumi | `/skill sosumi search "topic"` |
+
+**For detailed usage patterns, decision trees, and integration examples, see [SMITH-TOOLS.md](SMITH-TOOLS.md)**
+
+**Key principle:** Always pipe build output through analysis tools (never run bare `swift build` or `xcodebuild`).
+
 ### Committing
 
 Always follow the commit template in AGENTS-AGNOSTIC.md. Use:

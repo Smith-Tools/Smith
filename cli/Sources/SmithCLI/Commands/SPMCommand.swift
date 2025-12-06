@@ -11,9 +11,7 @@ struct SPM: ParsableCommand {
         abstract: "Swift Package Manager analysis tools",
         discussion: """
         Swift Package Manager specific tools for dependency analysis and package optimization.
-        
-        This command provides access to smith-spmsift for SPM package analysis.
-        
+
         Examples:
           smith spm analyze MyPackage/
           smith spm parse Package.resolved

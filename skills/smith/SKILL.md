@@ -90,3 +90,60 @@ All knowledge is in the `knowledge/` directory.
 - Detailed pattern teaching (skills handle this)
 - TCA-specific guidance (use smith-tca directly)
 - Platform API documentation (use smith-platforms directly)
+
+---
+
+## 🔧 Build Command Protocols
+
+**CRITICAL**: When executing build commands, ALWAYS use the appropriate Smith tool.
+
+### Command Routing Table
+
+| Build System | Command Pattern | Required Tool |
+|-------------|----------------|---------------|
+| Xcode workspace/project | `xcodebuild ...` | `... 2>&1 \| smith-xcsift` |
+| Swift Package Manager | `swift build` | `... 2>&1 \| smith-sbsift` |
+| SPM dependencies | `swift package ...` | `... \| smith-spmsift` |
+| TCA validation | Architecture analysis | `smith-validation` |
+
+### Default Behavior Rules
+
+1. **NEVER run bare build commands** - always pipe through analyzer
+2. **NEVER use --quiet or suppress output** - Smith tools need the output
+3. **ALWAYS capture stderr** - use `2>&1` to capture errors
+4. **ALWAYS use appropriate format** - `--format summary` for quick review
+
+### Examples
+
+#### ✅ Correct Patterns
+
+```bash
+# Xcode build
+xcodebuild build -workspace App.xcworkspace -scheme App -destination 'platform=macOS' 2>&1 | smith-xcsift
+
+# Swift build
+swift build 2>&1 | smith-sbsift --format summary
+
+# SPM analysis
+swift package show-dependencies | smith-spmsift
+```
+
+#### ❌ Anti-Patterns
+
+```bash
+# DON'T: Bare commands
+xcodebuild build -workspace App.xcworkspace -scheme App
+swift build
+
+# DON'T: Quiet mode
+xcodebuild build -quiet
+swift build 2>/dev/null
+
+# DON'T: No analysis
+xcodebuild build && echo "Success"
+```
+
+### Decision Tree
+
+See [knowledge/TOOL-SELECTION-DECISION-TREE.md](knowledge/TOOL-SELECTION-DECISION-TREE.md) for comprehensive tool selection logic.
+See [knowledge/BUILD-COMMAND-DEFAULTS.md](knowledge/BUILD-COMMAND-DEFAULTS.md) for command templates and scenarios.

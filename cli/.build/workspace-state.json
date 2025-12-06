@@ -7,53 +7,58 @@
       {
         "basedOn" : null,
         "packageRef" : {
-          "identity" : "smith-core",
-          "kind" : "remoteSourceControl",
-          "location" : "https://github.com/Smith-Tools/smith-core",
-          "name" : "smith-core"
+          "identity" : "sbdiagnostics",
+          "kind" : "fileSystem",
+          "location" : "/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics",
+          "name" : "sbdiagnostics"
         },
         "state" : {
-          "checkoutState" : {
-            "revision" : "c56717d6f57e2de169439ba9661f1e702af6b303",
-            "version" : "1.1.0"
-          },
-          "name" : "sourceControlCheckout"
+          "name" : "fileSystem",
+          "path" : "/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics"
         },
-        "subpath" : "smith-core"
+        "subpath" : "sbdiagnostics"
       },
       {
         "basedOn" : null,
         "packageRef" : {
-          "identity" : "smith-validation",
-          "kind" : "remoteSourceControl",
-          "location" : "https://github.com/Smith-Tools/smith-validation",
-          "name" : "smith-validation"
+          "identity" : "smitherrorhandling",
+          "kind" : "fileSystem",
+          "location" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithErrorHandling",
+          "name" : "SmithErrorHandling"
         },
         "state" : {
-          "checkoutState" : {
-            "revision" : "cb147205841ade14f3bb388b85ed2e335b7fc6d6",
-            "version" : "1.1.1"
-          },
-          "name" : "sourceControlCheckout"
+          "name" : "fileSystem",
+          "path" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithErrorHandling"
         },
-        "subpath" : "smith-validation"
+        "subpath" : "smitherrorhandling"
       },
       {
         "basedOn" : null,
         "packageRef" : {
-          "identity" : "sourcekitten",
-          "kind" : "remoteSourceControl",
-          "location" : "https://github.com/jpsim/SourceKitten.git",
-          "name" : "SourceKitten"
+          "identity" : "smithoutputformatter",
+          "kind" : "fileSystem",
+          "location" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithOutputFormatter",
+          "name" : "SmithOutputFormatter"
         },
         "state" : {
-          "checkoutState" : {
-            "revision" : "731ffe6a35344a19bab00cdca1c952d5b4fee4d8",
-            "version" : "0.37.2"
-          },
-          "name" : "sourceControlCheckout"
+          "name" : "fileSystem",
+          "path" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithOutputFormatter"
         },
-        "subpath" : "SourceKitten"
+        "subpath" : "smithoutputformatter"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "smithprogress",
+          "kind" : "fileSystem",
+          "location" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithProgress",
+          "name" : "SmithProgress"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithProgress"
+        },
+        "subpath" : "smithprogress"
       },
       {
         "basedOn" : null,
@@ -71,40 +76,6 @@
           "name" : "sourceControlCheckout"
         },
         "subpath" : "swift-argument-parser"
-      },
-      {
-        "basedOn" : null,
-        "packageRef" : {
-          "identity" : "swxmlhash",
-          "kind" : "remoteSourceControl",
-          "location" : "https://github.com/drmohundro/SWXMLHash.git",
-          "name" : "SWXMLHash"
-        },
-        "state" : {
-          "checkoutState" : {
-            "revision" : "a853604c9e9a83ad9954c7e3d2a565273982471f",
-            "version" : "7.0.2"
-          },
-          "name" : "sourceControlCheckout"
-        },
-        "subpath" : "SWXMLHash"
-      },
-      {
-        "basedOn" : null,
-        "packageRef" : {
-          "identity" : "yams",
-          "kind" : "remoteSourceControl",
-          "location" : "https://github.com/jpsim/Yams.git",
-          "name" : "Yams"
-        },
-        "state" : {
-          "checkoutState" : {
-            "revision" : "51b5127c7fb6ffac106ad6d199aaa33c5024895f",
-            "version" : "6.2.0"
-          },
-          "name" : "sourceControlCheckout"
-        },
-        "subpath" : "Yams"
       }
     ],
     "prebuilts" : [

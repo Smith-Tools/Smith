@@ -1,0 +1,73 @@
+{
+  "": {
+    "dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SmithBuildAnalysis.d",
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SmithBuildAnalysis.o",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/master.swiftdeps"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/AutoFixEngine.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/AutoFixEngine.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/AutoFixEngine~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/AutoFixEngine.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/AutoFixEngine.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/BuildDiagnostics.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/BuildDiagnostics.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/BuildDiagnostics~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/BuildDiagnostics.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/BuildDiagnostics.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/DependencyGraph.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/DependencyGraph.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/DependencyGraph~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/DependencyGraph.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/DependencyGraph.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/Formatters/DependencyFormatter.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/DependencyFormatter.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/DependencyFormatter~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/DependencyFormatter.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/DependencyFormatter.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/HangDetector.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/HangDetector.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/HangDetector~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/HangDetector.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/HangDetector.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/Models.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/Models.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/Models~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/Models.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/Models.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/OutputFormatter.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/OutputFormatter.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/OutputFormatter~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/OutputFormatter.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/OutputFormatter.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/ProjectDetector.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/ProjectDetector.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/ProjectDetector~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/ProjectDetector.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/ProjectDetector.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/SharedMonitor.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SharedMonitor.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SharedMonitor~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SharedMonitor.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SharedMonitor.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/SmithCore.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SmithCore.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SmithCore~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SmithCore.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SmithCore.dia"
+  },
+  "/Volumes/Plutonian/_Developer/Smith-Tools/smith-build-analysis/Sources/SmithBuildAnalysis/SyntaxValidators.swift": {
+    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SyntaxValidators.swift.o",
+    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SyntaxValidators~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SyntaxValidators.swiftdeps",
+    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/SyntaxValidators.dia"
+  }
+}

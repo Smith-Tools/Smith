@@ -24,7 +24,7 @@ e394bf350e38cb100b6bc4172834770ede1b7232	not-for-merge	branch 'release/1.0.3' of
 309a47b2b1d9b5e991f36961c983ecec72275be3	not-for-merge	branch 'release/1.6.1' of https://github.com/apple/swift-argument-parser
 cdd0ef3755280949551dc26dee5de9ddeda89f54	not-for-merge	branch 'release/1.6.2' of https://github.com/apple/swift-argument-parser
 af1be50a9365f849e5cf289ff82afcd97af5fe2a	not-for-merge	branch 'standardized-docs' of https://github.com/apple/swift-argument-parser
-61a6602ef288836e1207a069ca29af405fe2bce8	not-for-merge	branch 't/main/gh829_add_new_argument_type_FlagOption' of https://github.com/apple/swift-argument-parser
+2316d12697c47ada440d7d8dc62ee12bddc1c252	not-for-merge	branch 't/main/gh829_add_new_argument_type_FlagOption' of https://github.com/apple/swift-argument-parser
 850c1bdb6ebbdc50f1b2f58d8ff828815ca481a8	not-for-merge	branch 'user/dickoff/help-search-functionality' of https://github.com/apple/swift-argument-parser
 5177e0bce7659700fd15c0b933e347a231ad6b5d	not-for-merge	'refs/pull/10/head' of https://github.com/apple/swift-argument-parser
 b108ee20fcf8027c68c55c1cbd3a7b44597d4200	not-for-merge	'refs/pull/101/head' of https://github.com/apple/swift-argument-parser
@@ -547,8 +547,8 @@ f4130e123ddd0a7fbc5b696ecad352ec32ef5478	not-for-merge	'refs/pull/823/head' of h
 e70beb03229ed442633b955052ef38f2a90fa2f5	not-for-merge	'refs/pull/826/head' of https://github.com/apple/swift-argument-parser
 4ee8baf639b70c1120c281d4d58b89bd9ef2938e	not-for-merge	'refs/pull/828/head' of https://github.com/apple/swift-argument-parser
 dd14a91db648de0874530b9d91ff92df20d60962	not-for-merge	'refs/pull/83/head' of https://github.com/apple/swift-argument-parser
-61a6602ef288836e1207a069ca29af405fe2bce8	not-for-merge	'refs/pull/830/head' of https://github.com/apple/swift-argument-parser
-c455f59a6461d28d4042c74606ee893f8f312073	not-for-merge	'refs/pull/830/merge' of https://github.com/apple/swift-argument-parser
+2316d12697c47ada440d7d8dc62ee12bddc1c252	not-for-merge	'refs/pull/830/head' of https://github.com/apple/swift-argument-parser
+c31dd912c6e81b6ac2daf094060e4b4b556c5344	not-for-merge	'refs/pull/830/merge' of https://github.com/apple/swift-argument-parser
 850c1bdb6ebbdc50f1b2f58d8ff828815ca481a8	not-for-merge	'refs/pull/832/head' of https://github.com/apple/swift-argument-parser
 9008eb15eb2cb0393609e3a54e5d2ba3c56b3a5c	not-for-merge	'refs/pull/832/merge' of https://github.com/apple/swift-argument-parser
 5a6a00497a2b029b4609d823530604dc8318bf04	not-for-merge	'refs/pull/86/head' of https://github.com/apple/swift-argument-parser

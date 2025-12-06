@@ -1,0 +1,3 @@
+module smithPackageTests {
+    header "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/smithPackageTests.build/include/smithPackageTests-Swift.h"
+}

@@ -1,0 +1,3 @@
+module SmithBuildAnalysis {
+    header "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithBuildAnalysis.build/include/SmithBuildAnalysis-Swift.h"
+}
