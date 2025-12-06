@@ -16,29 +16,38 @@ struct SmithCLI: ParsableCommand {
         to provide comprehensive build analysis, hang detection, and optimization
         recommendations for Swift projects.
         """,
-        version: "1.2.0",
+        version: "2.0.0",
         subcommands: [
-            Analyze.self,
+            // Tier 1: Capability Commands (User-Facing)
+            Analyze.self,           // Single smart entry point
+            DependenciesCommand.self,  // NEW: Unified dependency analysis
+            DiagnoseCommand.self,  // Consolidated diagnosis
+            Validate.self,         // TCA architecture validation
+            Trace.self,            // TCA performance tracing
+            Optimize.self,         // Optimization recommendations
+            ParseCommand.self,     // Parse build output
+            MonitorBuild.self,     // Real-time monitoring
+            Project.self,          // Project {detect|info|status}
+
+            // Tier 2: Domain Commands (Expert/Explicit)
+            Xcode.self,            // Xcode-specific commands
+            Swift.self,            // Swift build-specific commands
+            SPM.self,              // SPM-specific commands
+            TCA.self,              // TCA-specific commands
+
+            // Additional commands
             Detect.self,
             Status.self,
-            Validate.self,
-            Optimize.self,
             Environment.self,
-            MonitorBuild.self,
             Version.self,
+
+            // Legacy commands (will be removed in v3.0)
             SmartAnalyze.self,
-            // New wrapper subcommands
-            Validation.self,
-            Xcode.self,
-            Swift.self,
-            SPM.self,
-            TCA.self,
-            // Legacy Xcode-specific commands (moved from smith-xcsift)
             Rebuild.self,
             Clean.self,
             XcodeAnalyze.self,
             XcodeMonitor.self,
-            Diagnose.self
+            Validation.self
         ]
     )
 
@@ -62,57 +71,43 @@ struct SmithCLI: ParsableCommand {
     }
 }
 
-// MARK: - Analyze Command
+// MARK: - Analyze Command (Smart Entry Point)
 
 struct Analyze: ParsableCommand {
     static let configuration = CommandConfiguration(
-        abstract: "Analyze project build performance and issues"
+        abstract: "Smart project analysis with automatic tool detection",
+        discussion: """
+        Automatically detects project type and delegates to the most appropriate tool.
+        This is the unified entry point that replaces all analyze variants.
+
+        Examples:
+          smith analyze                           # Analyze current directory
+          smith analyze ~/Projects/MyApp/         # Analyze specific project
+          smith analyze --format=json            # JSON output
+          smith analyze --verbose                 # Show which tools were used
+        """
     )
 
     @Argument(help: "Path to analyze (default: current directory)")
     var path: String = "."
 
-    @Flag(name: .long, help: "Enable hang detection")
-    var hangDetection = false
+    @Option(name: .long, help: "Output format: auto|json|summary|detailed (default: auto)")
+    var format: String = "auto"
 
-    @Option(name: .long, help: "CPU usage threshold for hang detection (percentage)")
-    var cpuThreshold: Double?
+    @Flag(name: .long, help: "Show which tools are being used (default: silent)")
+    var verbose = false
 
-    @Option(name: .long, help: "Memory usage threshold for hang detection (GB)")
-    var memoryThreshold: Double?
-
-    @Option(name: .long, help: "Hang detection timeout interval (seconds)")
-    var timeout: Int = 30
+    @Option(name: .long, help: "Force specific tool instead of auto-detection")
+    var forceTool: String?
 
     func run() throws {
-        print("🔍 SMITH BUILD ANALYSIS")
-        print("========================")
-
-        let resolvedPath = (path as NSString).standardizingPath
-        let projectType = ProjectDetector.detectProjectType(at: resolvedPath)
-
-        print("📊 Project Type: \(formatProjectType(projectType))")
-
-        if hangDetection {
-            print("\n🚨 HANG DETECTION ENABLED")
-            print("   ↳ CPU Threshold: \(cpuThreshold ?? 80.0)%")
-            print("   ↳ Memory Threshold: \(memoryThreshold ?? 2.0)GB")
-            print("   ↳ Timeout Interval: \(timeout)s")
-        }
-
-        let analysis = SmithCore.quickAnalyze(at: resolvedPath)
-
-        print("\n📈 PROJECT METRICS")
-        print("==================")
-        print("Source Files: \(analysis.metrics.fileCount ?? 0)")
-        print("Dependencies: \(analysis.dependencyGraph.targetCount)")
-        print("Build System: Detected")
-
-        if hangDetection {
-            print("\n🚨 HANG DETECTION")
-            print("================")
-            print("Hang detection enabled (thresholds: CPU \(cpuThreshold ?? 80.0)%, Memory \(memoryThreshold ?? 2.0)GB)")
-        }
+        // Delegate to SmartAnalyze with the new interface
+        var smartAnalyze = SmartAnalyze()
+        if !path.isEmpty { smartAnalyze.path = path }
+        if !format.isEmpty { smartAnalyze.format = format }
+        if verbose { smartAnalyze.verbose = verbose }
+        if let tool = forceTool, !tool.isEmpty { smartAnalyze.forceTool = tool }
+        try smartAnalyze.run()
     }
 }
 
@@ -1006,71 +1001,7 @@ struct XcodeMonitor: ParsableCommand {
     }
 }
 
-// MARK: - Diagnose Command (moved from smith-xcsift)
-
-struct Diagnose: ParsableCommand {
-    static let configuration = CommandConfiguration(
-        abstract: "Diagnose Xcode build environment and configuration"
-    )
-
-    @Argument(help: "Path to Xcode project")
-    var path: String = "."
-
-    @Flag(name: .long, help: "Check Xcode installation")
-    var xcode: Bool = false
-
-    @Flag(name: .long, help: "Check build environment")
-    var environment: Bool = false
-
-    @Flag(name: .long, help: "Check project configuration")
-    var configuration: Bool = false
-
-    func run() throws {
-        print("🔬 SMITH XCODE DIAGNOSIS")
-        print("========================")
-
-        var diagnostics: [String] = []
-
-        if xcode {
-            print("\n🛠️  XCODE INSTALLATION")
-            print("=======================")
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-            process.arguments = ["xcodebuild", "-version"]
-
-            let pipe = Pipe()
-            process.standardOutput = pipe
-            process.standardError = Pipe()
-
-            try process.run()
-            process.waitUntilExit()
-
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: data, encoding: .utf8) ?? ""
-
-            if process.terminationStatus == 0 {
-                print("✅ Xcode installation detected")
-                print(output.trimmingCharacters(in: .whitespacesAndNewlines))
-            } else {
-                print("❌ Xcode installation not found or corrupted")
-            }
-        }
-
-        if environment {
-            print("\n🌍 BUILD ENVIRONMENT")
-            print("===================")
-            print("✅ Environment check completed")
-        }
-
-        if configuration {
-            print("\n⚙️  PROJECT CONFIGURATION")
-            print("========================")
-            let resolvedPath = (path as NSString).standardizingPath
-            let projectType = ProjectDetector.detectProjectType(at: resolvedPath)
-            print("Project Type: \(formatProjectType(projectType))")
-        }
-    }
-}
+// DiagnoseCommand is implemented in Commands/DiagnoseCommand.swift
 
 // MARK: - Helper Functions for Xcode Commands
 
@@ -1108,5 +1039,108 @@ private func findXcodeProject(in directory: String) -> String? {
         }
     }
     return nil
+}
+
+// MARK: - New Command Stubs (to be implemented)
+
+// Dependencies command is implemented in DependenciesCommand.swift
+
+// DiagnoseCommand is implemented in Commands/DiagnoseCommand.swift
+
+// Placeholder for Trace command
+struct Trace: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "TCA performance tracing and analysis"
+    )
+
+    func run() throws {
+        print("🔍 TCA Performance Tracing")
+        print("==========================")
+        print("Delegating to smith-tca-trace...")
+
+        if let tcaTracePath = findSmithTCATracePath() {
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: tcaTracePath)
+            process.arguments = []
+
+            let pipe = Pipe()
+            process.standardOutput = pipe
+            process.standardError = pipe
+
+            try process.run()
+            process.waitUntilExit()
+
+            let outputData = pipe.fileHandleForReading.readDataToEndOfFile()
+            let output = String(data: outputData, encoding: .utf8) ?? ""
+            print(output)
+        } else {
+            print("❌ smith-tca-trace not found")
+        }
+    }
+}
+
+// Placeholder for ParseCommand has been replaced by Commands/ParseCommand.swift
+
+// Placeholder for Project command
+struct Project: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "Project detection, information, and status",
+        subcommands: [
+            ProjectDetect.self,
+            ProjectInfo.self,
+            ProjectStatus.self
+        ],
+        defaultSubcommand: ProjectDetect.self
+    )
+}
+
+extension Project {
+    struct ProjectDetect: ParsableCommand {
+        static let configuration = CommandConfiguration(
+            abstract: "Detect project type and build system"
+        )
+
+        @Argument(help: "Path to detect (default: current directory)")
+        var path: String = "."
+
+        func run() throws {
+            var detect = Detect()
+            if !path.isEmpty { detect.path = path }
+            try detect.run()
+        }
+    }
+
+    struct ProjectInfo: ParsableCommand {
+        static let configuration = CommandConfiguration(
+            abstract: "Show detailed project information"
+        )
+
+        @Argument(help: "Path to analyze (default: current directory)")
+        var path: String = "."
+
+        func run() throws {
+            print("📋 PROJECT INFORMATION")
+            print("=====================")
+
+            let resolvedPath = (path as NSString).standardizingPath
+            let projectType = ProjectDetector.detectProjectType(at: resolvedPath)
+
+            print("Path: \(resolvedPath)")
+            print("Type: \(formatProjectType(projectType))")
+
+            // Add more detailed info in Phase 1
+        }
+    }
+
+    struct ProjectStatus: ParsableCommand {
+        static let configuration = CommandConfiguration(
+            abstract: "Show project build status"
+        )
+
+        func run() throws {
+            let status = Status()
+            try status.run()
+        }
+    }
 }
 

@@ -1,6 +1,9 @@
 import Foundation
 import ArgumentParser
-import SmithCore
+import SmithBuildAnalysis
+import SmithOutputFormatter
+import SmithErrorHandling
+import SmithProgress
 
 // MARK: - Smart Analyze Command
 
@@ -36,21 +39,15 @@ struct SmartAnalyze: ParsableCommand {
     var forceTool: String?
 
     func run() throws {
-        let outputFormatter = OutputFormatter()
-        let output = CLIOutput(format: .auto)
+        let output = SmithCLIOutput()
         output.section("SMART PROJECT ANALYSIS")
 
-        let resolvedPath = (path as NSString).standardizingPath
-        output.info("Path: \(resolvedPath)")
-        output.info("Detecting project type...")
-
         // Validate and resolve path
-        let validatedPath = try ErrorHandler.processToolResult(
+        let resolvedPath = try ErrorHandler.processToolResult(
             ErrorHandler.validateProjectPath(path),
             format: format
         )
 
-        let resolvedPath = validatedPath
         output.info("Path: \(resolvedPath)")
         output.info("Detecting project type...")
 
@@ -69,8 +66,7 @@ struct SmartAnalyze: ParsableCommand {
         // Execute analysis with recommended tool
         let result = try executeAnalysis(with: recommendedTool, at: resolvedPath, format: format)
 
-        // Use OutputFormatter for TTY-aware output
-        displayResults(result, tool: recommendedTool, projectType: projectType, formatter: outputFormatter, verbose: verbose)
+        displayResults(result, tool: recommendedTool, projectType: projectType, verbose: verbose)
     }
 
     private func determineBestTool(for projectType: ProjectType, forceTool: String?) -> ToolRecommendation {
@@ -195,27 +191,20 @@ struct SmartAnalyze: ParsableCommand {
         }
     }
 
-    private func displayResults(_ result: AnalysisResult, tool: ToolRecommendation, projectType: ProjectType, formatter: OutputFormatter, verbose: Bool) {
-        let resolvedFormat: OutputFormatter.Format
-        
-        switch format.lowercased() {
-        case "json": resolvedFormat = .json
-        case "summary": resolvedFormat = .summary
-        case "detailed": resolvedFormat = .detailed
-        case "compact": resolvedFormat = .compact
-        case "minimal": resolvedFormat = .minimal
-        default: resolvedFormat = .auto
+    private func displayResults(_ result: AnalysisResult, tool: ToolRecommendation, projectType: ProjectType, verbose: Bool) {
+        let output = SmithCLIOutput()
+
+        if format.lowercased() == "json" {
+            outputJSON(result, tool: tool)
+        } else {
+            outputSummary(result, tool: tool, projectType: projectType)
         }
-        
-        // Use OutputFormatter for TTY-aware output
-        let output = formatter.format(result, as: resolvedFormat)
-        print(output)
-        
+
         // Show additional recommendations for non-JSON output
-        if resolvedFormat != .json && !verbose {
-            print("")
-            print("💡 Run with --verbose for detailed diagnostics")
-            print("💡 Use --format=json for machine-readable output")
+        if format.lowercased() != "json" && !verbose {
+            output.info("")
+            output.info("💡 Run with --verbose for detailed diagnostics")
+            output.info("💡 Use --format=json for machine-readable output")
         }
     }
 
@@ -236,21 +225,22 @@ struct SmartAnalyze: ParsableCommand {
 
     private func outputSummary(_ result: AnalysisResult, tool: ToolRecommendation, projectType: ProjectType) {
         let status = result.success ? "✅" : "❌"
-        print("")
-        print("📋 ANALYSIS RESULTS")
-        print("===================")
-        print("Status: \(status) \(result.success ? "Success" : "Failed")")
-        print("Tool: \(result.tool)")
-        print("Confidence: \(Int(result.confidence * 100))%")
+        let output = SmithCLIOutput()
+        output.info("")
+        output.info("📋 ANALYSIS RESULTS")
+        output.info("===================")
+        output.info("Status: \(status) \(result.success ? "Success" : "Failed")")
+        output.info("Tool: \(result.tool)")
+        output.info("Confidence: \(Int(result.confidence * 100))%")
 
         if let error = result.error, !error.isEmpty {
-            print("Error: \(error)")
+            output.error("Error: \(error)")
         }
 
         if !result.output.isEmpty {
-            print("")
-            print("📄 OUTPUT:")
-            print(result.output)
+            output.info("")
+            output.info("📄 OUTPUT:")
+            output.info(result.output)
         }
 
         // Success recommendations

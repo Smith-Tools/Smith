@@ -28,7 +28,8 @@ let package = Package(
                 .product(name: "SmithErrorHandling", package: "SmithErrorHandling"),
                 .product(name: "SmithOutputFormatter", package: "SmithOutputFormatter"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
-            ]
+            ],
+            path: "Sources"
         ),
         .testTarget(
             name: "SmithCLITests",
