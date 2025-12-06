@@ -49,7 +49,13 @@ struct DependenciesCommand: ParsableCommand {
     @Flag(name: .long, help: "Show which tools are being used")
     var verbose = false
 
-    func run() throws {
+    @Flag(name: .long, help: "Discover and show DocC documentation for dependencies")
+    var withDocs = false
+
+    @Flag(name: .long, help: "Fetch documentation from GitHub (clones repositories)")
+    var async = false
+
+    func run() async throws {
         let output = SmithCLIOutput()
         output.section("DEPENDENCY ANALYSIS")
 
@@ -109,6 +115,192 @@ struct DependenciesCommand: ParsableCommand {
             output.info("✅ Analysis complete for both Xcode and Swift Package dependencies")
             output.info("💡 Use 'smith xcode dependencies' or 'smith spm dependencies' for detailed analysis")
         }
+
+        // Discover documentation if requested
+        if withDocs && hasSPMProject {
+            output.info("")
+            print("DOCUMENTATION DISCOVERY")
+
+            // Discover documentation
+            if async {
+                // Use async discovery with GitHub cloning
+                try await discoverDocumentationAsync(at: resolvedPath, output: output)
+            } else {
+                // Use sync discovery (cache and Xcode only)
+                discoverDocumentationSync(at: resolvedPath, output: output)
+            }
+        }
+    }
+
+    private func discoverDocumentationSync(at path: String, output: SmithCLIOutput) {
+        // Parse Package.resolved for dependencies
+        let packageResolvedPath = (path as NSString).appendingPathComponent("Package.resolved")
+        let workspaceResolvedPath = (path as NSString).appendingPathComponent(".build/workspace-state.json")
+
+        guard FileManager.default.fileExists(atPath: packageResolvedPath) ||
+              FileManager.default.fileExists(atPath: workspaceResolvedPath) else {
+            output.info("⚠️  No Package.resolved found. Run 'swift package resolve' first.")
+            return
+        }
+
+        // Parse dependencies from Package.resolved
+        let dependencies = parsePackageResolved(at: path)
+
+        if dependencies.isEmpty {
+            output.info("ℹ️  No external dependencies found")
+            return
+        }
+
+        output.info("Checking documentation for \(dependencies.count) dependencies...")
+
+        let discoverer = DocCDiscoverer()
+        let verboseMode = verbose
+
+        // Sync mode: only check cache and Xcode
+        for dep in dependencies {
+            let depName = dep.name
+            let depVersion = dep.version
+            _ = dep.owner ?? "unknown"
+            _ = dep.repo ?? depName
+
+            if let result = discoverer.discoverSync(
+                package: depName,
+                version: depVersion
+            ) {
+                print("  \(result.statusIcon) \(depName)@\(depVersion): \(result.sourceDescription)")
+                if verboseMode {
+                    print("     Path: \(result.archiveURL.path)")
+                    print("     Cost: \(result.cost) tokens")
+                }
+            } else {
+                print("  ⚠️ \(depName)@\(depVersion): Not cached (use --async flag for GitHub)")
+            }
+        }
+
+        // Show cached docs summary
+        let cached = discoverer.listCached()
+        if !cached.isEmpty {
+            output.info("")
+            output.info("📦 Cached documentation: \(cached.count) package(s)")
+            output.info("   Location: ~/.cache/smith/docc/")
+        }
+    }
+
+    private func discoverDocumentationAsync(at path: String, output: SmithCLIOutput) async throws {
+        // Parse Package.resolved for dependencies
+        let packageResolvedPath = (path as NSString).appendingPathComponent("Package.resolved")
+        let workspaceResolvedPath = (path as NSString).appendingPathComponent(".build/workspace-state.json")
+
+        guard FileManager.default.fileExists(atPath: packageResolvedPath) ||
+              FileManager.default.fileExists(atPath: workspaceResolvedPath) else {
+            output.info("⚠️  No Package.resolved found. Run 'swift package resolve' first.")
+            return
+        }
+
+        // Parse dependencies from Package.resolved
+        let dependencies = parsePackageResolved(at: path)
+
+        if dependencies.isEmpty {
+            output.info("ℹ️  No external dependencies found")
+            return
+        }
+
+        output.info("Checking documentation for \(dependencies.count) dependencies...")
+
+        let discoverer = DocCDiscoverer()
+        let verboseMode = verbose
+
+        // Async mode: check cache, Xcode, and GitHub
+        for dep in dependencies {
+            let depName = dep.name
+            let depVersion = dep.version
+            let owner = dep.owner ?? "pointfreeco"
+            let repo = dep.repo ?? depName
+
+            do {
+                if let result = try await discoverer.discover(
+                    package: depName,
+                    version: depVersion,
+                    owner: owner,
+                    repo: repo
+                ) {
+                    print("  \(result.statusIcon) \(depName)@\(depVersion): \(result.sourceDescription)")
+                    if verboseMode {
+                        print("     Path: \(result.archiveURL.path)")
+                        print("     Cost: \(result.cost) tokens")
+                    }
+                } else {
+                    print("  ⚠️ \(depName)@\(depVersion): Documentation not found")
+                }
+            } catch {
+                print("  ⚠️ \(depName)@\(depVersion): Error checking documentation - \(error.localizedDescription)")
+            }
+        }
+
+        // Show cached docs summary
+        let cached = discoverer.listCached()
+        if !cached.isEmpty {
+            output.info("")
+            output.info("📦 Cached documentation: \(cached.count) package(s)")
+            output.info("   Location: ~/.cache/smith/docc/")
+        }
+    }
+
+    private struct ParsedDependency {
+        let name: String
+        let version: String
+        let owner: String?
+        let repo: String?
+    }
+
+    private func parsePackageResolved(at path: String) -> [ParsedDependency] {
+        let packageResolvedPath = (path as NSString).appendingPathComponent("Package.resolved")
+
+        guard let data = FileManager.default.contents(atPath: packageResolvedPath),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return []
+        }
+
+        var dependencies: [ParsedDependency] = []
+
+        // Handle Package.resolved v2 format (pins at root) or v1 format (object.pins)
+        var pins: [[String: Any]]?
+        if let rootPins = json["pins"] as? [[String: Any]] {
+            pins = rootPins
+        } else if let object = json["object"] as? [String: Any],
+                  let objectPins = object["pins"] as? [[String: Any]] {
+            pins = objectPins
+        }
+
+        if let pins = pins {
+            for pin in pins {
+                guard let identity = pin["identity"] as? String,
+                      let state = pin["state"] as? [String: Any] else {
+                    continue
+                }
+
+                let version = (state["version"] as? String) ?? (state["revision"] as? String)?.prefix(7).description ?? "unknown"
+                let location = pin["location"] as? String ?? ""
+
+                // Parse GitHub URL for owner/repo
+                var owner: String?
+                var repo: String?
+
+                if let parsed = DocCDiscoverer.parseGitHubURL(location) {
+                    owner = parsed.owner
+                    repo = parsed.repo
+                }
+
+                dependencies.append(ParsedDependency(
+                    name: identity,
+                    version: version,
+                    owner: owner,
+                    repo: repo
+                ))
+            }
+        }
+
+        return dependencies
     }
 
     private func detectAllProjectTypes(at path: String) -> [ProjectType] {
