@@ -1,6 +1,6 @@
 import Foundation
 import ArgumentParser
-import SmithBuildAnalysis
+import SBDiagnostics
 import SmithOutputFormatter
 import SmithErrorHandling
 import SmithProgress
@@ -21,7 +21,6 @@ struct SmithCLI: ParsableCommand {
             // Tier 1: Capability Commands (User-Facing)
             Analyze.self,           // Single smart entry point
             DependenciesCommand.self,  // NEW: Unified dependency analysis
-            DiagnoseCommand.self,  // Consolidated diagnosis
             Validate.self,         // TCA architecture validation
             Trace.self,            // TCA performance tracing
             Optimize.self,         // Optimization recommendations

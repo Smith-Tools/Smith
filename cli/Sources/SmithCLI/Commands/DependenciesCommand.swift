@@ -1,6 +1,6 @@
 import Foundation
 import ArgumentParser
-import SmithBuildAnalysis
+import SBDiagnostics
 import SmithOutputFormatter
 import SmithErrorHandling
 import SmithProgress
