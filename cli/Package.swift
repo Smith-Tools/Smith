@@ -14,9 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../smith-diagnostics"),
-        .package(path: "../../smith-foundation/SmithProgress"),
-        .package(path: "../../smith-foundation/SmithErrorHandling"),
-        .package(path: "../../smith-foundation/SmithOutputFormatter"),
+        .package(path: "../../smith-foundation"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0")
     ],
     targets: [
@@ -24,9 +22,9 @@ let package = Package(
             name: "SmithCLI",
             dependencies: [
                 .product(name: "SBDiagnostics", package: "smith-diagnostics"),
-                .product(name: "SmithProgress", package: "SmithProgress"),
-                .product(name: "SmithErrorHandling", package: "SmithErrorHandling"),
-                .product(name: "SmithOutputFormatter", package: "SmithOutputFormatter"),
+                .product(name: "SmithProgress", package: "smith-foundation"),
+                .product(name: "SmithErrorHandling", package: "smith-foundation"),
+                .product(name: "SmithOutputFormatter", package: "smith-foundation"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
             path: "Sources"

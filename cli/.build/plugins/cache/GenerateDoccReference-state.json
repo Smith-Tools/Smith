@@ -61,7 +61,7 @@
     "MANPATH" : "/Applications/Xcode-26.1.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk/usr/share/man:/Applications/Xcode-26.1.0.app/Contents/Developer/Platforms/MacOSX.platform/usr/share/man:/Applications/Xcode-26.1.0.app/Contents/Developer/usr/share/man:/Applications/Xcode-26.1.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man:",
     "MINIMAX_API_KEY" : "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJHcm91cE5hbWUiOiJDcmlzdGlhbiBEw61heiIsIlVzZXJOYW1lIjoiQ3Jpc3RpYW4gRMOtYXoiLCJBY2NvdW50IjoiIiwiU3ViamVjdElEIjoiMTk4NjMyMjY4Nzk5MDk2NDgxNiIsIlBob25lIjoiIiwiR3JvdXBJRCI6IjE5ODYzMjI2ODc5ODY3NjY0MTYiLCJQYWdlTmFtZSI6IiIsIk1haWwiOiJjcmlzdGlhbi5kaWF6QHJlYWxpdHkyNzEzLmNvbSIsIkNyZWF0ZVRpbWUiOiIyMDI1LTExLTI4IDIwOjUxOjE0IiwiVG9rZW5UeXBlIjo0LCJpc3MiOiJtaW5pbWF4In0.xZa580PrYcCPgISOQl_JrJJQeK717fAIq6Cu_ormcbJI0Eq8Yj3WfniWKPCrvsOTKI0KZd2SgYPvt1Yju6TSQbj3f0yQITGM8EMdWV28Ci5tICnlT48IkZNCfFDncbcx90YAlR8TCoSrHKXVDeGCtDXDeYopLs7A8Sw-t2qwIaUmk8AwuzyPxe5w2HRPx4OCatnOWg-wIVVQtNvKLQ3QNUp6OpEGPoUVLdG2MQic3uysrSCI7CcMC3Em76jelxYVUkZk-PaOm46i3nsyUzBdavkEt4AtxyOGhQJR0SrS0HGyLKLzRypDPDGHWL_v2yUYOek_qoIFe_bEsu4OAOOuSw",
     "MallocNanoZone" : "0",
-    "OLDPWD" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli",
+    "OLDPWD" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation",
     "ORIGINAL_XDG_CURRENT_DESKTOP" : "undefined",
     "OSLogRateLimit" : "64",
     "PAGER" : "cat",
@@ -88,7 +88,7 @@
     "__CFBundleIdentifier" : "com.google.antigravity",
     "__CF_USER_TEXT_ENCODING" : "0x1F5:0x0:0x0"
   },
-  "inputHash" : "3489f05421522870397fb0ad96a13bab41002851b2db04ed6ae4590331392d8a",
+  "inputHash" : "ec56c99b697416534476e221c48a7941d53e36d05dde3aaac2e7b3b7271ce6de",
   "output" : "",
   "result" : {
     "exit" : {
