@@ -812,25 +812,25 @@ smith xcode monitor --project MyProject.xcodeproj --scheme MyScheme --hang-detec
 
 Recommended Commands:
 
-# Build Analysis (smith swift for build output)
+# Build Analysis (smith parse for build output)
 # Standard build with smith analysis
-swift build 2>&1 | smith swift
+swift build 2>&1 | smith parse
 
 # Real-time build monitoring (when builds are slow)
-smith swift monitor --monitor --eta
+swift build 2>&1 | smith monitor --eta
 
 # Emergency recovery (hung builds)
-smith swift monitor --hang-detection
+swift build 2>&1 | smith monitor --hang-detection
 
-# Package Analysis (smith spm for package structure)
+# Package Analysis (smith dependencies for package structure)
 # Package validation and configuration check
-smith spm validate
+smith dependencies .
 
 # Comprehensive package analysis with metrics
-smith spm analyze --metrics
+smith dependencies . --metrics
 
 # Parse package dump for structured data
-swift package dump-package | smith spm parse
+swift package dump-package | smith dependencies --format json
 ```
 
 ### For Simple Swift Files (No Package/Project)
@@ -876,7 +876,7 @@ Smith Tools specializes in iOS, macOS, visionOS, and other Apple platform develo
 1. **ALWAYS run Zero-Bias Detection Protocol first** (Step 0 above)
 2. **ALWAYS use the exact response templates** from "Smith Response Templates (Apple Platform Build Questions)" section
 3. **NEVER provide generic build advice** - always use the specific piped commands from templates
-4. **ALWAYS include the piped commands** (e.g., `2>&1 | xcsift`) as shown in templates
+4. **ALWAYS include the piped commands** (e.g., `2>&1 | smith parse`) as shown in templates
 
 **Template Selection Rules:**
 - Workspace detected → Use "For Xcode Workspace (Highest Priority)" template
@@ -987,10 +987,10 @@ Before providing ANY validation or build health results:
 **When User Reports Build Issue:**
 
 1. DETECT project type (using existing Zero-Bias Detection Protocol)
-2. SELECT appropriate tool (smith xcode, smith swift, smith spm)
+2. SELECT appropriate tool (smith xcode, smith monitor, smith dependencies)
 3. EXECUTE with pipe:
-   - Workspace: `xcodebuild ... 2>&1 | smith xcode`
-   - Package: `swift build 2>&1 | smith swift`
+   - Workspace: `xcodebuild ... 2>&1 | smith xcode analyze`
+   - Package: `swift build 2>&1 | smith parse`
 4. WAIT for completion (use proper timeout)
 5. PARSE output (read actual command results)
 6. REPORT actual results (not assumptions)
@@ -1008,13 +1008,13 @@ Before providing ANY validation or build health results:
 find . -maxdepth 3 -name "*.xcworkspace" -type d
 
 # EXECUTE exact command (replace <workspace-name> and <scheme-name>)
-xcodebuild build -workspace <workspace-name>.xcworkspace -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode
+xcodebuild build -workspace <workspace-name>.xcworkspace -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode analyze
 
 # FOR hang detection
-xcodebuild build -workspace <workspace-name>.xcworkspace -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode --hang-detection
+xcodebuild build -workspace <workspace-name>.xcworkspace -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode monitor --hang-detection
 
 # FOR clean build
-xcodebuild clean build -workspace <workspace-name>.xcworkspace -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode
+xcodebuild clean build -workspace <workspace-name>.xcworkspace -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode analyze
 ```
 
 #### For Xcode Projects (.xcodeproj only)
@@ -1024,10 +1024,10 @@ xcodebuild clean build -workspace <workspace-name>.xcworkspace -scheme <scheme-n
 find . -maxdepth 3 -name "*.xcodeproj" -type d
 
 # EXECUTE exact command (replace <project-name> and <scheme-name>)
-xcodebuild build -project <project-name>.xcodeproj -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode
+xcodebuild build -project <project-name>.xcodeproj -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode analyze
 
 # FOR hang detection
-xcodebuild build -project <project-name>.xcodeproj -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode --hang-detection
+xcodebuild build -project <project-name>.xcodeproj -scheme <scheme-name> -configuration Debug 2>&1 | smith xcode monitor --hang-detection
 ```
 
 #### For Swift Packages (Package.swift)
@@ -1037,13 +1037,13 @@ xcodebuild build -project <project-name>.xcodeproj -scheme <scheme-name> -config
 find . -maxdepth 2 -name "Package.swift" -type f
 
 # EXECUTE exact command
-swift build 2>&1 | smith swift
+swift build 2>&1 | smith parse
 
 # FOR hang detection
-swift build 2>&1 | smith swift --hang-detection
+swift build 2>&1 | smith monitor --hang-detection
 
 # FOR clean build
-swift package clean && swift build 2>&1 | smith swift
+swift package clean && swift build 2>&1 | smith parse
 ```
 
 #### For Code Validation (Always Run)
@@ -1074,7 +1074,7 @@ find . -maxdepth 2 -name "Package.swift" -type f
 **Step 3: Execute Exact Command**
 ```bash
 # EXAMPLE: If workspace "Scroll.xcworkspace" with scheme "Scroll" found
-xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -configuration Debug 2>&1 | smith xcode
+xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -configuration Debug 2>&1 | smith xcode analyze
 ```
 
 **Step 4: Parse Real Results**
@@ -1087,15 +1087,15 @@ xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -configuration Deb
 ### FORBIDDEN: Command Variations
 
 **NEVER use these patterns:**
-- ❌ `xcodebuild build` (without pipe to smith xcode)
-- ❌ `swift build` (without pipe to smith swift)
-- ❌ Describing what smith xcode "would" show
+- ❌ `xcodebuild build` (without pipe to smith)
+- ❌ `swift build` (without pipe to smith)
+- ❌ Describing what smith "would" show
 - ❌ Providing build status without running commands
 - ❌ Custom commands or flags not in templates
 
 **ALWAYS use these patterns:**
-- ✅ `xcodebuild ... 2>&1 | smith xcode`
-- ✅ `swift build 2>&1 | smith swift`
+- ✅ `xcodebuild ... 2>&1 | smith xcode analyze`
+- ✅ `swift build 2>&1 | smith parse`
 - ✅ `smith validate --tca`
 - ✅ Run command FIRST, then report results
 - ✅ Use exact templates above
@@ -1113,7 +1113,7 @@ xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -configuration Deb
 **Example Workflow:**
 ```bash
 # Actually run this command, don't just suggest it
-Bash("xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -configuration Debug clean build 2>&1 | smith xcode", timeout: 600000)
+Bash("xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -configuration Debug clean build 2>&1 | smith xcode analyze", timeout: 600000)
 ```
 
 **FORBIDDEN:**
@@ -1142,16 +1142,14 @@ When working on Smith Tools code, follow these non-negotiable rules. Ecosystem h
 
 **BEFORE committing any changes that affect tool references:**
 
-1. ✅ Search entire codebase for deprecated tool names (smith-xcsift, smith-sbsift, smith-spmsift)
+1. ✅ Search entire codebase for deprecated tool names
 2. ✅ Result must be ZERO active code references (archived files don't count)
 3. ✅ Update ALL of these files consistently:
    - `Smith/install.sh` - User-facing installation guide
-   - `Smith/.claude/instructions.md` - Agent instructions
    - `Smith/agent/smith.md` - Agent brain (this file)
    - `Smith/skills/smith/SKILL.md` - Skill triggers
    - `install-smith-tools-unified.sh` - Master installer
    - `Smith/scripts/smith-self-validation.sh` - Validation
-   - `release.sh` - Release script examples
 
 4. ✅ Test clean installation: Can a new user install via `smith` and have it work?
 5. ✅ No "backward compatibility" - if tools are gone, they're GONE. No soft deprecation.
@@ -1164,13 +1162,11 @@ These are the places agents read. If one is wrong, ecosystem appears broken:
 Places agents read:
 ├── Smith/agent/smith.md                    ← Agent brain (THIS FILE)
 ├── Smith/skills/smith/SKILL.md             ← What triggers the skill
-├── Smith/.claude/instructions.md           ← Claude Code instructions
 ├── CLAUDE.md                               ← Project context file
 │
 Installation/Setup (critical for users):
 ├── Smith/install.sh                        ← What users run first
 ├── install-smith-tools-unified.sh          ← Master installer
-├── release.sh                              ← Release examples
 ```
 
 **RULE**: If you change a tool, update ALL of these files. If you skip one, the ecosystem appears broken.
@@ -1190,15 +1186,15 @@ User runs: smith analyze /path/to/project
                          ↓
          SmithCore.getRecommendedApproach()
                          ↓
-    Recommends: smith xcode / smith spm / smith swift
+    Recommends: smith xcode / smith dependencies / smith parse
 ```
 
 **Available Commands**:
 - `smith analyze /path` - Auto-detect and recommend tools
 - `smith detect /path` - Detailed project type detection
 - `smith xcode` - Xcode-specific analysis (workspace/project)
-- `smith spm` - Swift Package Manager analysis
-- `smith swift` - Swift build analysis
+- `smith dependencies` - Swift Package Manager analysis
+- `smith parse` - Swift build analysis
 - `smith project detect` - Alternative project detection
 
 **Project Detection Logic** (in ProjectDetector.swift):
@@ -1211,7 +1207,7 @@ User runs: smith analyze /path/to/project
 
 - ❌ Documentation mentions tools that don't exist
 - ❌ Installation scripts try to install non-existent tools
-- ❌ Code references deprecated tool names (smith-*sift)
+- ❌ Code references deprecated tool names
 - ❌ Agent definitions don't match actual CLI commands
 - ❌ Users have to search multiple places to understand which tool to use
 - ❌ Examples in documentation don't match actual command syntax
@@ -1219,7 +1215,7 @@ User runs: smith analyze /path/to/project
 
 ### How To Know Ecosystem Is Healthy
 
-- ✅ All references use current unified CLI (smith xcode, smith spm, smith swift, smith analyze)
+- ✅ All references use current unified CLI (smith xcode, smith dependencies, smith parse, smith analyze)
 - ✅ Installation works on clean machine
 - ✅ All documentation uses same examples
 - ✅ Agent guidance consistent across files

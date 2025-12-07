@@ -65,14 +65,15 @@ smith-foundation (Shared Libraries)
     ├─ SmithErrorHandling - Error management
     └─ SmithProgress - Progress tracking
 
-smith-build-analysis (Shared Parsing)
-    └─ Build output parsing and diagnostics
+smith-diagnostics (Diagnostics Engine)
+    └─ Build output parsing, hang detection, and diagnostics
 
 smith (Unified CLI)
     ├─ dependencies - Project and package analysis
     ├─ validate - Architectural validation
     ├─ analyze - Comprehensive analysis
     └─ diagnose - Build diagnostics
+    └─ parse - Unified build output parsing
 
 smith-validation (Rules Engine)
     ├─ TCA Rules 1.1-1.5
@@ -94,6 +95,7 @@ smith-skill (Claude Code Integration)
 - `validate` - Validate architecture (e.g., TCA rules)
 - `analyze` - Comprehensive project analysis
 - `diagnose` - Build diagnostics
+- `parse` - Parse build logs
 
 **Features**:
 - Auto-detects project type (SPM/Xcode)
@@ -171,7 +173,7 @@ smith-skill (Claude Code Integration)
 │                                                          │
 │  Step 4: Build                                          │
 │  ↓                                                       │
-│  smith analyze → Comprehensive analysis                 │
+│  smith parse → Build output analysis                    │
 │  ↓                                                       │
 │  Build and test                                         │
 │                                                          │
@@ -232,20 +234,26 @@ Production Ready Code
 
 ## Design Decisions
 
-### Why Separate Tools?
+### Why Universal CLI?
 
-Each Smith tool specializes in one phase:
-- `spmsift` handles package setup
-- `sbsift` handles Swift builds
-- `xcsift` handles Xcode builds
-- `validation` handles architecture
-- `cli` orchestrates everything
+The `smith` CLI consolidates all capabilities into a single tool:
+- `smith dependencies` replaces legacy package tools
+- `smith parse` replaces legacy log parsers
+- `smith validate` handles architecture rules
+- `smith diagnose` handles troubleshooting
 
-This separation allows:
-- Independent evolution
-- Reusability (e.g., sbsift in automation)
-- Clear responsibility
-- Easy testing
+This unification allows:
+- Single entry point for all workflows
+- Consistent user experience
+- Shared configuration and state
+- Easier distribution and updates
+
+### Why separate smith-parser?
+
+While `smith` CLI is the main interface, `smith-parser` exists as a specialized, pipeable tool for build systems:
+- Can be used in CI/CD without full CLI
+- Optimized for streaming text input
+- Zero dependencies for raw log parsing
 
 ### Why smith-diagnostics?
 
