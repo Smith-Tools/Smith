@@ -1104,6 +1104,38 @@ Installation/Setup (critical for users):
 
 **RULE**: If you change a tool, update ALL of these files. If you skip one, the ecosystem appears broken.
 
+### How Project Type Detection Works (Answer to "How do tools know?")
+
+The ecosystem automatically detects whether a project is a workspace, project, or SPM package:
+
+```
+User runs: smith analyze /path/to/project
+                         ↓
+         ProjectDetector.detectProjectType()
+                         ↓
+     Looks for: .xcworkspace, .xcodeproj, Package.swift
+                         ↓
+         Determines: workspace/project/spm
+                         ↓
+         SmithCore.getRecommendedApproach()
+                         ↓
+    Recommends: smith xcode / smith spm / smith swift
+```
+
+**Available Commands**:
+- `smith analyze /path` - Auto-detect and recommend tools
+- `smith detect /path` - Detailed project type detection
+- `smith xcode` - Xcode-specific analysis (workspace/project)
+- `smith spm` - Swift Package Manager analysis
+- `smith swift` - Swift build analysis
+- `smith project detect` - Alternative project detection
+
+**Project Detection Logic** (in ProjectDetector.swift):
+1. Check for Package.swift → SPM
+2. Check for .xcworkspace → Xcode Workspace
+3. Check for .xcodeproj → Xcode Project
+4. Return unknown if none found
+
 ### Red Flags That Indicate Broken Ecosystem
 
 - ❌ Documentation mentions tools that don't exist
@@ -1112,6 +1144,7 @@ Installation/Setup (critical for users):
 - ❌ Agent definitions don't match actual CLI commands
 - ❌ Users have to search multiple places to understand which tool to use
 - ❌ Examples in documentation don't match actual command syntax
+- ❌ `smith analyze` command doesn't properly detect project type
 
 ### How To Know Ecosystem Is Healthy
 
