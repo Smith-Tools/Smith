@@ -10,6 +10,7 @@ tags:
 triggers:
   - "Smith"
   - "smith-validation"
+  - "smith dependencies"
   - "code review"
   - "xcodebuild"
   - "swift build"
@@ -21,8 +22,6 @@ triggers:
   - "circular dependency"
   - "TCA reducer"
   - "@Reducer"
-  - "smith-xcsift"
-  - "smith-sbsift"
   - "xcworkspace"
   - "workspace"
   - "architecture validation"
@@ -99,48 +98,49 @@ All knowledge is in the `knowledge/` directory.
 
 ### Command Routing Table
 
-| Build System | Command Pattern | Required Tool |
-|-------------|----------------|---------------|
-| Xcode workspace/project | `xcodebuild ...` | `... 2>&1 \| smith-xcsift` |
-| Swift Package Manager | `swift build` | `... 2>&1 \| smith-sbsift` |
-| SPM dependencies | `swift package ...` | `... \| smith-spmsift` |
-| TCA validation | Architecture analysis | `smith-validation` |
+| Task | Smith CLI Command |
+|------|-------------------|
+| Project analysis | `smith dependencies /path/to/project` |
+| Architecture validation | `smith validate --tca` |
+| Comprehensive analysis | `smith analyze /path/to/project` |
+| Build diagnostics | `smith diagnose` |
 
 ### Default Behavior Rules
 
-1. **NEVER run bare build commands** - always pipe through analyzer
-2. **NEVER use --quiet or suppress output** - Smith tools need the output
-3. **ALWAYS capture stderr** - use `2>&1` to capture errors
-4. **ALWAYS use appropriate format** - `--format summary` for quick review
+1. **NEVER provide analysis without running smith** - always execute commands first
+2. **NEVER assume results** - Smith tools must be invoked to get real data
+3. **ALWAYS capture real output** - use smith CLI commands to get actual results
+4. **ALWAYS report actual findings** - base statements on real command execution
 
 ### Examples
 
 #### ✅ Correct Patterns
 
 ```bash
-# Xcode build
-xcodebuild build -workspace App.xcworkspace -scheme App -destination 'platform=macOS' 2>&1 | smith-xcsift
+# Project structure analysis
+smith dependencies /path/to/project
 
-# Swift build
-swift build 2>&1 | smith-sbsift --format summary
+# Architecture validation
+smith validate --tca
 
-# SPM analysis
-swift package show-dependencies | smith-spmsift
+# Comprehensive project analysis
+smith analyze /path/to/project
+
+# Build diagnostics
+smith diagnose
 ```
 
 #### ❌ Anti-Patterns
 
 ```bash
-# DON'T: Bare commands
-xcodebuild build -workspace App.xcworkspace -scheme App
-swift build
+# DON'T: Assume results without running commands
+"Code appears healthy" (without running smith validate)
 
-# DON'T: Quiet mode
-xcodebuild build -quiet
-swift build 2>/dev/null
+# DON'T: Fake analysis
+"No issues detected" (without running smith commands)
 
-# DON'T: No analysis
-xcodebuild build && echo "Success"
+# DON'T: Generic advice
+"Try refactoring this" (without understanding actual project structure)
 ```
 
 ### Decision Tree

@@ -13,7 +13,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../../sbdiagnostics"),
+        .package(path: "../../smith-diagnostics"),
         .package(path: "../../smith-foundation/SmithProgress"),
         .package(path: "../../smith-foundation/SmithErrorHandling"),
         .package(path: "../../smith-foundation/SmithOutputFormatter"),
@@ -23,7 +23,7 @@ let package = Package(
         .executableTarget(
             name: "SmithCLI",
             dependencies: [
-                .product(name: "SBDiagnostics", package: "sbdiagnostics"),
+                .product(name: "SBDiagnostics", package: "smith-diagnostics"),
                 .product(name: "SmithProgress", package: "SmithProgress"),
                 .product(name: "SmithErrorHandling", package: "SmithErrorHandling"),
                 .product(name: "SmithOutputFormatter", package: "SmithOutputFormatter"),

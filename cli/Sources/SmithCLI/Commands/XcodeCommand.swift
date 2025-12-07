@@ -137,8 +137,8 @@ extension Xcode {
             Analyzes dependencies in Xcode projects and workspaces, providing
             dependency trees, circular dependency detection, and conflict analysis.
 
-            This command is specifically tailored for Xcode projects and delegates
-            to smith-xcsift when available, with fallback analysis when not.
+            This command provides deep analysis of your Xcode project's target
+            dependencies, frameworks, and build system configuration.
 
             Examples:
               smith xcode dependencies MyApp.xcodeproj

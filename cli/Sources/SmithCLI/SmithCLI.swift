@@ -10,17 +10,16 @@ struct SmithCLI: ParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "Smith Framework CLI - Unified build analysis and optimization tool",
         discussion: """
-        Smith CLI provides a unified interface to all Smith build analysis tools.
+        Smith CLI provides a unified interface for all build analysis capabilities.
 
-        It integrates smith-spmsift, smith-sbsift, smith-xcsift, and smith-core
-        to provide comprehensive build analysis, hang detection, and optimization
-        recommendations for Swift projects.
+        It provides comprehensive build analysis, dependency management, hang detection,
+        and optimization recommendations for Swift, Xcode, and SPM projects.
         """,
         version: "2.0.0",
         subcommands: [
             // Tier 1: Capability Commands (User-Facing)
             Analyze.self,           // Single smart entry point
-            DependenciesCommand.self,  // NEW: Unified dependency analysis
+            DependenciesCommand.self,  // Unified dependency analysis
             Validate.self,         // TCA architecture validation
             Trace.self,            // TCA performance tracing
             Optimize.self,         // Optimization recommendations
@@ -40,8 +39,7 @@ struct SmithCLI: ParsableCommand {
             Environment.self,
             Version.self,
 
-            // Legacy commands (will be removed in v3.0)
-            SmartAnalyze.self,
+            // Deprecated commands (removed in v2.0)
             Rebuild.self,
             Clean.self,
             XcodeAnalyze.self,
@@ -541,7 +539,7 @@ private func formatBuildSystem(_ system: Any) -> String {
 }
 
 
-// MARK: - Xcode Rebuild Command (moved from smith-xcsift)
+// MARK: - Rebuild Command (Deprecated)
 
 struct Rebuild: ParsableCommand {
     static let configuration = CommandConfiguration(
@@ -707,7 +705,7 @@ struct Rebuild: ParsableCommand {
     }
 }
 
-// MARK: - Xcode Clean Command (moved from smith-xcsift)
+// MARK: - Clean Command (Deprecated)
 
 struct Clean: ParsableCommand {
     static let configuration = CommandConfiguration(
@@ -771,7 +769,7 @@ struct Clean: ParsableCommand {
     }
 }
 
-// MARK: - Xcode Analyze Command (moved from smith-xcsift)
+// MARK: - XcodeAnalyze Command (Deprecated)
 
 struct XcodeAnalyze: ParsableCommand {
     static let configuration = CommandConfiguration(
@@ -837,7 +835,7 @@ struct XcodeAnalyze: ParsableCommand {
     }
 }
 
-// MARK: - Xcode Monitor Command (moved from smith-xcsift)
+// MARK: - XcodeMonitor Command (Deprecated)
 
 struct XcodeMonitor: ParsableCommand {
     static let configuration = CommandConfiguration(

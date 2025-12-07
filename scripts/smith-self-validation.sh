@@ -98,11 +98,11 @@ check_agent_validation() {
             return 1
         fi
 
-        # Check for smith-spmsift integration
-        if grep -q "smith-spmsift" "$smith_agent_file"; then
-            echo -e "${GREEN}   ✅ Includes smith-spmsift for Swift packages${NC}"
+        # Check for unified smith spm command
+        if grep -q "smith spm" "$smith_agent_file"; then
+            echo -e "${GREEN}   ✅ Includes unified smith spm command${NC}"
         else
-            echo -e "${RED}   ❌ Missing smith-spmsift integration${NC}"
+            echo -e "${RED}   ❌ Missing unified smith spm command${NC}"
             return 1
         fi
     else
@@ -137,10 +137,10 @@ check_skill_knowledge() {
             return 1
         fi
 
-        if grep -q "smith-xcsift" "$decision_trees_file"; then
-            echo -e "${GREEN}   ✅ Tree 5 references smith-xcsift${NC}"
+        if grep -q "smith xcode" "$decision_trees_file"; then
+            echo -e "${GREEN}   ✅ Tree 5 references unified smith xcode command${NC}"
         else
-            echo -e "${RED}   ❌ Tree 5 missing smith-xcsift reference${NC}"
+            echo -e "${RED}   ❌ Tree 5 missing unified smith xcode command reference${NC}"
             return 1
         fi
     fi

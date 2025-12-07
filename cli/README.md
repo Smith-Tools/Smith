@@ -53,14 +53,14 @@ smith check .
 - **Progress Tracking**: Visual progress indicators for long operations
 - **Structured Output**: JSON or human-readable output formats
 - **Error Recovery**: Comprehensive error handling with actionable suggestions
-- **Build Output Parsing**: Unified parsing for Xcode, Swift, and SPM builds via sbparser
+- **Build Output Parsing**: Unified parsing for Xcode, Swift, and SPM builds via smith-parser
 
 ## Architecture
 
 Smith CLI is an orchestrator that:
 1. Parses user commands via ArgumentParser
-2. Delegates to specialized tools (smith-xcsift, smith-sbsift, smith-validation)
-3. Uses sbparser for unified build output parsing
+2. Delegates to specialized tools (smith-xcsift, smith-validation, smith-tca-trace)
+3. Uses smith-parser for unified build output parsing
 4. Uses SmithBuildAnalysis for core parsing logic
 5. Presents results using Smith Foundation libraries
 
@@ -72,20 +72,15 @@ Smith CLI is an orchestrator that:
          │
     ┌────┴────┬────────┬──────────┐
     ▼         ▼        ▼          ▼
-┌────────┐ ┌──────┐ ┌────────┐ ┌────────┐
-│xcsift  │ │sbsift│ │validate│ │ trace  │
-└────────┘ └──────┘ └────────┘ └────────┘
-    │         │        │          │
-    └────┬────┴────┬───┴──────────┘
+┌────────┐ ┌──────────┐ ┌────────┐ ┌────────┐
+│xcsift  │ │validate  │ │ trace  │ │parser  │
+└────────┘ └──────────┘ └────────┘ └────────┘
+    │         │           │          │
+    └────┬────┴────┬──────┴──────────┘
          ▼         ▼
     ┌──────────────────────┐
-    │     sbparser         │
-    │  (Build Parser)      │
-    └──────────┬───────────┘
-               │
-    ┌──────────────────────┐
     │  SmithBuildAnalysis  │
-    └──────────────────────┘
+    └──────────┬───────────┘
                │
     ┌──────────▼───────────┐
     │  Smith Foundation    │
@@ -141,7 +136,7 @@ xcodebuild build | smith parse-command --errors
 swift build | smith parse-command --minimal
 ```
 
-**Backend**: This command delegates to `sbparser` for unified parsing. If sbparser is not installed, it falls back to basic parsing and provides installation instructions.
+**Backend**: This command delegates to `smith-parser` for unified parsing. If smith-parser is not installed, it falls back to basic parsing and provides installation instructions.
 
 **Output Formats**:
 - `summary` (default): Human-readable summary with key metrics
@@ -155,9 +150,9 @@ swift build | smith parse-command --minimal
 - **SmithProgress**: Progress tracking
 - **SmithOutputFormatter**: Output formatting
 - **SmithErrorHandling**: Error management
-- **sbparser**: Unified build output parser (delegated via PATH)
+- **smith-parser**: Unified build output parser (delegated via PATH)
 
-These are automatically resolved via Swift Package Manager, except for `sbparser` which should be installed separately and available in PATH.
+These are automatically resolved via Swift Package Manager, except for `smith-parser` which should be installed separately and available in PATH.
 
 ## Configuration
 
@@ -205,9 +200,9 @@ MIT License - See LICENSE file for details
 
 ## Related Projects
 
-- [smith-xcsift](../../smith-xcsift) - Xcode build analysis
-- [smith-sbsift](../../smith-sbsift) - Swift build analysis
-- [smith-spmsift](../../smith-spmsift) - Swift Package Manager analysis
+- [smith-parser](../../smith-parser) - Unified build output parser (backend for parse-command)
 - [smith-validation](../../smith-validation) - TCA validation
+- [smith-tca-trace](../../smith-tca-trace) - TCA performance tracing
+- [smith-build-analysis](../../smith-build-analysis) - Shared analysis library
 - [smith-foundation](../../smith-foundation) - Foundation libraries
-- [sbparser](../../sbparser) - Unified build output parser (backend for parse-command)
+- [smith-diagnostics](../../smith-diagnostics) - Diagnostics engine

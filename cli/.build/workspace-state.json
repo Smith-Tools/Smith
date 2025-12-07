@@ -7,16 +7,16 @@
       {
         "basedOn" : null,
         "packageRef" : {
-          "identity" : "sbdiagnostics",
+          "identity" : "smith-diagnostics",
           "kind" : "fileSystem",
-          "location" : "/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics",
-          "name" : "sbdiagnostics"
+          "location" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-diagnostics",
+          "name" : "smith-diagnostics"
         },
         "state" : {
           "name" : "fileSystem",
-          "path" : "/Volumes/Plutonian/_Developer/Smith-Tools/sbdiagnostics"
+          "path" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-diagnostics"
         },
-        "subpath" : "sbdiagnostics"
+        "subpath" : "smith-diagnostics"
       },
       {
         "basedOn" : null,
@@ -24,7 +24,7 @@
           "identity" : "smitherrorhandling",
           "kind" : "fileSystem",
           "location" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithErrorHandling",
-          "name" : "SmithErrorHandling"
+          "name" : "SmithFoundation_ErrorHandling"
         },
         "state" : {
           "name" : "fileSystem",
@@ -38,7 +38,7 @@
           "identity" : "smithoutputformatter",
           "kind" : "fileSystem",
           "location" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithOutputFormatter",
-          "name" : "SmithOutputFormatter"
+          "name" : "SmithFoundation_OutputFormatter"
         },
         "state" : {
           "name" : "fileSystem",
@@ -52,7 +52,7 @@
           "identity" : "smithprogress",
           "kind" : "fileSystem",
           "location" : "/Volumes/Plutonian/_Developer/Smith-Tools/smith-foundation/SmithProgress",
-          "name" : "SmithProgress"
+          "name" : "SmithFoundation_Progress"
         },
         "state" : {
           "name" : "fileSystem",
