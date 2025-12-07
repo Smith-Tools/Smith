@@ -98,13 +98,40 @@ struct Analyze: ParsableCommand {
     var forceTool: String?
 
     func run() throws {
-        // Delegate to SmartAnalyze with the new interface
-        var smartAnalyze = SmartAnalyze()
-        if !path.isEmpty { smartAnalyze.path = path }
-        if !format.isEmpty { smartAnalyze.format = format }
-        if verbose { smartAnalyze.verbose = verbose }
-        if let tool = forceTool, !tool.isEmpty { smartAnalyze.forceTool = tool }
-        try smartAnalyze.run()
+        print("🔍 PROJECT ANALYSIS")
+        print("==================")
+
+        let resolvedPath = (path as NSString).standardizingPath
+        let projectType = ProjectDetector.detectProjectType(at: resolvedPath)
+
+        print("📁 Project: \(URL(fileURLWithPath: resolvedPath).lastPathComponent)")
+        print("🏗️  Type: \(formatProjectType(projectType))")
+
+        // Recommend appropriate tool based on project type
+        let recommendation = SmithCore.getRecommendedApproach(for: projectType)
+        print("💡 Recommendation: \(recommendation)")
+
+        print("\n📊 Quick Analysis:")
+        let analysis = SmithCore.quickAnalyze(at: resolvedPath)
+        print("   • Targets/Packages: \(analysis.dependencyGraph.targetCount)")
+        print("   • Max Dependency Depth: \(analysis.dependencyGraph.maxDepth)")
+        if analysis.dependencyGraph.circularDeps {
+            print("   • ⚠️  Circular dependencies detected")
+        } else {
+            print("   • ✅ No circular dependencies")
+        }
+
+        print("\n🚀 Next Steps:")
+        switch projectType {
+        case .xcodeWorkspace, .xcodeProject:
+            print("   • Run: smith xcode analyze")
+            print("   • Run: smith dependencies /path")
+        case .spm:
+            print("   • Run: smith spm analyze")
+            print("   • Run: smith spm dependencies")
+        case .unknown:
+            print("   • Run: smith detect /path (for detailed detection)")
+        }
     }
 }
 

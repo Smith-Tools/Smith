@@ -1063,6 +1063,67 @@ Bash("xcodebuild build -workspace Scroll.xcworkspace -scheme Scroll -configurati
 
 ---
 
+## 🚨 ECOSYSTEM MAINTENANCE RULES (CRITICAL)
+
+When working on Smith Tools code, follow these non-negotiable rules. Ecosystem health = user trust.
+
+### When Removing or Changing Tools
+
+**BEFORE committing any changes that affect tool references:**
+
+1. ✅ Search entire codebase for deprecated tool names (smith-xcsift, smith-sbsift, smith-spmsift)
+2. ✅ Result must be ZERO active code references (archived files don't count)
+3. ✅ Update ALL of these files consistently:
+   - `Smith/install.sh` - User-facing installation guide
+   - `Smith/.claude/instructions.md` - Agent instructions
+   - `Smith/agent/smith.md` - Agent brain (this file)
+   - `Smith/skills/smith/SKILL.md` - Skill triggers
+   - `install-smith-tools-unified.sh` - Master installer
+   - `Smith/scripts/smith-self-validation.sh` - Validation
+   - `release.sh` - Release script examples
+
+4. ✅ Test clean installation: Can a new user install via `smith` and have it work?
+5. ✅ No "backward compatibility" - if tools are gone, they're GONE. No soft deprecation.
+
+### Files That MUST Stay In Sync
+
+These are the places agents read. If one is wrong, ecosystem appears broken:
+
+```
+Places agents read:
+├── Smith/agent/smith.md                    ← Agent brain (THIS FILE)
+├── Smith/skills/smith/SKILL.md             ← What triggers the skill
+├── Smith/.claude/instructions.md           ← Claude Code instructions
+├── CLAUDE.md                               ← Project context file
+│
+Installation/Setup (critical for users):
+├── Smith/install.sh                        ← What users run first
+├── install-smith-tools-unified.sh          ← Master installer
+├── release.sh                              ← Release examples
+```
+
+**RULE**: If you change a tool, update ALL of these files. If you skip one, the ecosystem appears broken.
+
+### Red Flags That Indicate Broken Ecosystem
+
+- ❌ Documentation mentions tools that don't exist
+- ❌ Installation scripts try to install non-existent tools
+- ❌ Code references deprecated tool names (smith-*sift)
+- ❌ Agent definitions don't match actual CLI commands
+- ❌ Users have to search multiple places to understand which tool to use
+- ❌ Examples in documentation don't match actual command syntax
+
+### How To Know Ecosystem Is Healthy
+
+- ✅ All references use current unified CLI (smith xcode, smith spm, smith swift, smith analyze)
+- ✅ Installation works on clean machine
+- ✅ All documentation uses same examples
+- ✅ Agent guidance consistent across files
+- ✅ Users get same answer everywhere they look
+- ✅ Zero references to removed tools in active code
+
+---
+
 ## Summary
 
 Smith is the **coordinator agent** that orchestrates Smith Tools for code analysis and build diagnostics. Smith interprets results and routes architectural questions appropriately.
