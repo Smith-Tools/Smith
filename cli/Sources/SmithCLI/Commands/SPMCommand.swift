@@ -66,16 +66,11 @@ extension SPM {
                 throw ExitCode.failure
             }
 
-            // Delegate to smith-spmsift if available
-            if let spmsiftPath = findSmithSPMSiftPath() {
-                try runSmithSPMSiftAnalyze(at: resolvedPath, json: json, dependencies: dependencies, optimize: optimize, circular: circular)
-            } else {
-                // Fallback to basic analysis
-                print("")
-                print("📊 BASIC PACKAGE ANALYSIS")
-                print("=========================")
-                performBasicPackageAnalysis(at: resolvedPath)
-            }
+            // Perform basic analysis
+            print("")
+            print("📊 BASIC PACKAGE ANALYSIS")
+            print("=========================")
+            performBasicPackageAnalysis(at: resolvedPath)
         }
 
         private func isValidSwiftPackage(at path: String) -> Bool {
@@ -97,39 +92,6 @@ extension SPM {
             }
         }
 
-        private func runSmithSPMSiftAnalyze(at path: String, json: Bool, dependencies: Bool, optimize: Bool, circular: Bool) throws {
-            var arguments = ["analyze", path]
-            if json { arguments.append("--json") }
-            if dependencies { arguments.append("--dependencies") }
-            if optimize { arguments.append("--optimize") }
-            if circular { arguments.append("--circular") }
-
-            print("")
-            print("🔧 Running smith-spmsift analysis...")
-
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: findSmithSPMSiftPath()!)
-            process.arguments = arguments
-
-            let outputPipe = Pipe()
-            let errorPipe = Pipe()
-            process.standardOutput = outputPipe
-            process.standardError = errorPipe
-
-            try process.run()
-            process.waitUntilExit()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: outputData, encoding: .utf8) ?? ""
-
-            if process.terminationStatus == 0 {
-                print(output)
-            } else {
-                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                let errorOutput = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                print("❌ Analysis failed: \(errorOutput)")
-            }
-        }
 
         private func performBasicPackageAnalysis(at path: String) {
             let packageSwift = URL(fileURLWithPath: path).appendingPathComponent("Package.swift")

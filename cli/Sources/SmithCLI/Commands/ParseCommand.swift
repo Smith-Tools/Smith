@@ -8,12 +8,12 @@ import SmithProgress
 
 struct ParseCommand: ParsableCommand {
     static let configuration = CommandConfiguration(
-        abstract: "Parse build output from stdin using sbparser",
+        abstract: "Parse build output from stdin using smith-parser",
         discussion: """
         Unified build output parsing that automatically detects and parses
         Swift, Xcode, and SPM build outputs.
 
-        This command delegates to sbparser, which provides consolidated parsing
+        This command delegates to smith-parser, which provides consolidated parsing
         for all build system types.
 
         Examples:
@@ -68,12 +68,12 @@ struct ParseCommand: ParsableCommand {
         print("🔍 PARSING BUILD OUTPUT")
         print("========================")
 
-        // Check if sbparser is available
-        if let sbparserPath = findSBParserPath() {
+        // Check if smith-parser is available
+        if let smithParserPath = findSBParserPath() {
             try runSBParser(input: inputString)
         } else {
             // Fallback to basic parsing
-            print("⚠️  sbparser not found - using basic parsing")
+            print("⚠️  smith-parser not found - using basic parsing")
             print("")
             performBasicParse(output: inputString, format: format)
         }
@@ -102,7 +102,7 @@ struct ParseCommand: ParsableCommand {
             arguments.append("--output=\(outputPath)")
         }
 
-        print("🔧 Running sbparser...")
+        print("🔧 Running smith-parser...")
 
         let process = Process()
         process.executableURL = URL(fileURLWithPath: findSBParserPath()!)
@@ -174,8 +174,8 @@ struct ParseCommand: ParsableCommand {
                 print("⚠️  Warnings: \(output.components(separatedBy: ": warning: ").count - 1)")
             }
             print("")
-            print("💡 Install sbparser for detailed analysis:")
-            print("   https://github.com/Smith-Tools/sbparser")
+            print("💡 Install smith-parser for detailed analysis:")
+            print("   https://github.com/Smith-Tools/smith-parser")
         }
     }
 }

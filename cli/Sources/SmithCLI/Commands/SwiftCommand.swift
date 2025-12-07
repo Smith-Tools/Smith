@@ -68,16 +68,11 @@ extension Swift {
                 throw ExitCode.failure
             }
 
-            // Delegate to smith-sbsift if available
-            if let sbsiftPath = findSmithSBSiftPath() {
-                try runSmithSBSiftAnalyze(at: resolvedPath, json: json, hangDetection: hangDetection, fileTiming: fileTiming, bottleneck: bottleneck)
-            } else {
-                // Fallback to basic analysis
-                print("")
-                print("📊 BASIC SWIFT ANALYSIS")
-                print("=======================")
-                performBasicSwiftAnalysis(at: resolvedPath)
-            }
+            // Perform basic analysis
+            print("")
+            print("📊 BASIC SWIFT ANALYSIS")
+            print("=======================")
+            performBasicSwiftAnalysis(at: resolvedPath)
         }
 
         private func isValidSwiftPackage(at path: String) -> Bool {
@@ -99,39 +94,6 @@ extension Swift {
             }
         }
 
-        private func runSmithSBSiftAnalyze(at path: String, json: Bool, hangDetection: Bool, fileTiming: Bool, bottleneck: Int) throws {
-            var arguments = ["analyze", path]
-            if json { arguments.append("--json") }
-            if hangDetection { arguments.append("--hang-detection") }
-            if fileTiming { arguments.append("--file-timing") }
-            if bottleneck > 0 { arguments.append("--bottleneck=\(bottleneck)") }
-
-            print("")
-            print("🔧 Running smith-sbsift analysis...")
-
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: findSmithSBSiftPath()!)
-            process.arguments = arguments
-
-            let outputPipe = Pipe()
-            let errorPipe = Pipe()
-            process.standardOutput = outputPipe
-            process.standardError = errorPipe
-
-            try process.run()
-            process.waitUntilExit()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: outputData, encoding: .utf8) ?? ""
-
-            if process.terminationStatus == 0 {
-                print(output)
-            } else {
-                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                let errorOutput = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                print("❌ Analysis failed: \(errorOutput)")
-            }
-        }
 
         private func performBasicSwiftAnalysis(at path: String) {
             let fileManager = FileManager.default
@@ -163,16 +125,16 @@ extension Swift {
 extension Swift {
     struct Parse: ParsableCommand {
         static let configuration = CommandConfiguration(
-            abstract: "Parse Swift build output from stdin using sbparser",
+            abstract: "Parse Swift build output from stdin using smith-parser",
             discussion: """
-            Parses Swift build output from stdin and delegates to sbparser
+            Parses Swift build output from stdin and delegates to smith-parser
             for unified parsing across all build systems.
 
             Examples:
               swift build | smith swift parse
               swift build | smith swift parse --format=json
 
-            Note: This command now delegates to sbparser, which provides
+            Note: This command now delegates to smith-parser, which provides
             consolidated parsing for Xcode, Swift, and SPM builds.
             """
         )
@@ -209,16 +171,12 @@ extension Swift {
             print("🔍 PARSING SWIFT BUILD OUTPUT")
             print("=============================")
 
-            // Delegate to sbparser for parsing
-            if let sbparserPath = findSBParserPath() {
+            // Delegate to smith-parser for parsing
+            if let smithParserPath = findSBParserPath() {
                 try runSBParserParse(output: output, format: format, verbose: verbose, compact: compact, minimal: minimal)
-            } else if let sbsiftPath = findSmithSBSiftPath() {
-                // Fallback to smith-sbsift for backward compatibility
-                print("⚠️  sbparser not found - falling back to smith-sbsift")
-                try runSmithSBSiftParse(output: output, format: format, verbose: verbose, compact: compact, minimal: minimal)
             } else {
                 // Fallback basic parsing
-                print("⚠️  No parser tools found - using basic parsing")
+                print("⚠️  smith-parser not found - using basic parsing")
                 performBasicParse(output: output, format: format)
             }
         }
@@ -262,44 +220,6 @@ extension Swift {
             }
         }
 
-        private func runSmithSBSiftParse(output: String, format: String, verbose: Bool, compact: Bool, minimal: Bool) throws {
-            var arguments = ["parse", "--format=\(format)"]
-            if verbose { arguments.append("--verbose") }
-            if compact { arguments.append("--compact") }
-            if minimal { arguments.append("--minimal") }
-
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: findSmithSBSiftPath()!)
-            process.arguments = arguments
-
-            let inputPipe = Pipe()
-            let outputPipe = Pipe()
-            let errorPipe = Pipe()
-
-            process.standardInput = inputPipe
-            process.standardOutput = outputPipe
-            process.standardError = errorPipe
-
-            try process.run()
-
-            // Write input to process
-            inputPipe.fileHandleForWriting.write(output.data(using: .utf8) ?? Data())
-            inputPipe.fileHandleForWriting.closeFile()
-
-            process.waitUntilExit()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let resultOutput = String(data: outputData, encoding: .utf8) ?? ""
-
-            if process.terminationStatus == 0 {
-                print(resultOutput)
-            } else {
-                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                let errorOutput = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                print("❌ Parse failed: \(errorOutput)")
-                throw ExitCode.failure
-            }
-        }
 
         private func performBasicParse(output: String, format: String) {
             let hasErrors = output.contains(": error: ")

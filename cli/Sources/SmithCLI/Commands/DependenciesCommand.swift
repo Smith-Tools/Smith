@@ -332,79 +332,57 @@ struct DependenciesCommand: ParsableCommand {
             print("🔧 Analyzing Xcode dependencies...")
         }
 
-        // Perform basic Xcode dependency analysis
-        performBasicXcodeDependencyAnalysis(at: path)
+        // Use XcodeDependencyAnalyzer for detailed analysis
+        let analyzer = XcodeDependencyAnalyzer()
+        let analysis = analyzer.analyze(at: path)
+
+        // Output the analysis in requested format
+        let formattedOutput = analyzer.formatAnalysis(analysis, format: format)
+        print(formattedOutput)
+
+        // Show additional info if requested
+        if circular && !analysis.circularDependencies.isEmpty {
+            print("⚠️  CIRCULAR DEPENDENCIES DETECTED")
+            print("Review your target dependencies to break the cycle")
+        }
     }
 
     private func analyzeSPMDependencies(at path: String) throws {
         if verbose {
-            print("🔧 Analyzing Swift Package dependencies...")
+            print("🔧 Analyzing Swift Package dependencies using smith-diagnostics...")
         }
 
-        // Perform basic SPM dependency analysis
-        performBasicSPMDependencyAnalysis(at: path)
-    }
+        let analyzer = SPMAnalyzer()
+        let analysis: SPMPackageAnalysis = analyzer.analyzeDependencies(at: path)
 
-    private func performBasicXcodeDependencyAnalysis(at path: String) {
-        print("📊 Basic Xcode Dependency Analysis")
-        print("==================================")
+        // Output the analysis in requested format
+        let formattedOutput = analyzer.formatAnalysis(analysis, format: format)
+        print(formattedOutput)
 
-        // Look for .xcodeproj files
-        let fileManager = FileManager.default
-        var projectCount = 0
+        // Show additional info if requested
+        if circular && (analysis.dependencies?.circularImports ?? false) {
+            print("⚠️  CIRCULAR DEPENDENCIES DETECTED")
+            print("Review your package structure to break the cycle")
+        }
 
-        if let contents = try? fileManager.contentsOfDirectory(atPath: path) {
-            for item in contents {
-                if item.hasSuffix(".xcodeproj") {
-                    projectCount += 1
-                    print("📁 Project: \(item)")
+        if outdated {
+            if let outdatedPkgs = analysis.outdatedPackages {
+                print("\n📅 Outdated Packages: \(outdatedPkgs.outdatedPackages.count)")
+                for pkg in outdatedPkgs.outdatedPackages.prefix(5) {
+                    print("  • \(pkg.package): \(pkg.currentVersion) → \(pkg.latestVersion)")
                 }
             }
         }
 
-        if projectCount == 0 {
-            print("ℹ️  No Xcode projects found")
-        } else {
-            print("✅ Found \(projectCount) Xcode project(s)")
-            print("💡 Install smith-xcsift for detailed dependency analysis")
-        }
-    }
-
-    private func performBasicSPMDependencyAnalysis(at path: String) {
-        print("📦 Basic Swift Package Dependency Analysis")
-        print("=========================================")
-
-        let packagePath = (path as NSString).appendingPathComponent("Package.swift")
-        let fileManager = FileManager.default
-
-        if fileManager.fileExists(atPath: packagePath) {
-            print("✅ Swift Package found: Package.swift")
-
-            // Try to parse basic Package.swift info
-            if let packageContent = try? String(contentsOfFile: packagePath) {
-                let lines = packageContent.components(separatedBy: .newlines)
-                var inDependencies = false
-                var depCount = 0
-
-                for line in lines {
-                    if line.contains(".dependencies") {
-                        inDependencies = true
-                        continue
-                    }
-                    if inDependencies && line.trimmingCharacters(in: .whitespacesAndNewlines).starts(with: "]") {
-                        inDependencies = false
-                        continue
-                    }
-                    if inDependencies && (line.contains(".package(") || line.contains(".target(")) {
-                        depCount += 1
-                    }
+        if conflicts {
+            let conflictIssues = analysis.issues.filter { $0.type == .versionConflict }
+            if !conflictIssues.isEmpty {
+                print("\n⚠️  DEPENDENCY CONFLICTS: \(conflictIssues.count)")
+                for issue in conflictIssues.prefix(3) {
+                    print("  • \(issue.message)")
                 }
-
-                print("📊 Dependencies detected: \(depCount)")
-                print("💡 Install smith-spmsift for detailed dependency analysis")
             }
-        } else {
-            print("ℹ️  No Swift Package found")
         }
     }
+
 }

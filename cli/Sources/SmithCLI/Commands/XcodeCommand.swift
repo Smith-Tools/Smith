@@ -70,16 +70,11 @@ extension Xcode {
                 print("⚠️  Xcode not found - some features will be limited")
             }
 
-            // Delegate to smith-xcsift if available
-            if let xcsiftPath = findSmithXCSiftPath() {
-                try runSmithXCSiftAnalyze(at: resolvedPath, json: json, dependencies: dependencies, performance: performance, hangDetection: hangDetection)
-            } else {
-                // Fallback to basic analysis
-                print("")
-                print("📊 BASIC PROJECT ANALYSIS")
-                print("=========================")
-                performBasicXcodeAnalysis(at: resolvedPath)
-            }
+            // Perform basic analysis
+            print("")
+            print("📊 BASIC PROJECT ANALYSIS")
+            print("=========================")
+            performBasicXcodeAnalysis(at: resolvedPath)
         }
 
         private func isValidXcodeProject(at path: String) -> Bool {
@@ -101,39 +96,6 @@ extension Xcode {
             }
         }
 
-        private func runSmithXCSiftAnalyze(at path: String, json: Bool, dependencies: Bool, performance: Bool, hangDetection: Bool) throws {
-            var arguments = [path]
-            if json { arguments.append("--json") }
-            if dependencies { arguments.append("--dependencies") }
-            if performance { arguments.append("--performance") }
-            if hangDetection { arguments.append("--hang-detection") }
-
-            print("")
-            print("🔧 Running smith-xcsift analysis...")
-
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: findSmithXCSiftPath()!)
-            process.arguments = arguments
-
-            let outputPipe = Pipe()
-            let errorPipe = Pipe()
-            process.standardOutput = outputPipe
-            process.standardError = errorPipe
-
-            try process.run()
-            process.waitUntilExit()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: outputData, encoding: .utf8) ?? ""
-
-            if process.terminationStatus == 0 {
-                print(output)
-            } else {
-                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                let errorOutput = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                print("❌ Analysis failed: \(errorOutput)")
-            }
-        }
 
         private func performBasicXcodeAnalysis(at path: String) {
             let fileManager = FileManager.default
@@ -217,16 +179,11 @@ extension Xcode {
 
             print("✅ Xcode project detected")
 
-            // Delegate to smith-xcsift if available
-            if let xcsiftPath = findSmithXCSiftPath() {
-                try runSmithXCSiftDependencies(at: resolvedPath)
-            } else {
-                // Fallback to basic analysis
-                print("")
-                print("📊 BASIC DEPENDENCY ANALYSIS")
-                print("============================")
-                performBasicDependencyAnalysis(at: resolvedPath)
-            }
+            // Perform basic analysis
+            print("")
+            print("📊 BASIC DEPENDENCY ANALYSIS")
+            print("============================")
+            performBasicDependencyAnalysis(at: resolvedPath)
         }
 
         private func isValidXcodeProject(at path: String) -> Bool {
@@ -234,51 +191,6 @@ extension Xcode {
             return url.pathExtension == "xcodeproj" || url.pathExtension == "xcworkspace"
         }
 
-        private func runSmithXCSiftDependencies(at path: String) throws {
-            var arguments = ["dependencies", path]
-
-            // Add format-specific arguments
-            if tree { arguments.append("--tree") }
-            if circular { arguments.append("--circular") }
-            if !format.isEmpty && format != "summary" { arguments.append("--format=\(format)") }
-            if verbose { arguments.append("--verbose") }
-
-            print("")
-            print("🔧 Running smith-xcsift dependency analysis...")
-
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: findSmithXCSiftPath()!)
-            process.arguments = arguments
-
-            let outputPipe = Pipe()
-            let errorPipe = Pipe()
-            process.standardOutput = outputPipe
-            process.standardError = errorPipe
-
-            try process.run()
-            process.waitUntilExit()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: outputData, encoding: .utf8) ?? ""
-
-            if process.terminationStatus == 0 {
-                if !output.isEmpty {
-                    print(output)
-                } else {
-                    print("✅ No dependencies found")
-                }
-            } else {
-                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                let errorOutput = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                print("❌ Dependency analysis failed: \(errorOutput)")
-
-                // Fall back to basic analysis
-                print("")
-                print("📊 FALLING BACK TO BASIC ANALYSIS")
-                print("=================================")
-                performBasicDependencyAnalysis(at: path)
-            }
-        }
 
         private func performBasicDependencyAnalysis(at path: String) {
             let fileManager = FileManager.default
@@ -338,13 +250,13 @@ extension Xcode {
             if targetCount > 10 {
                 print("")
                 print("💡 Complex project detected - consider modularization")
-                print("   Install smith-xcsift for detailed dependency analysis")
+                print("   Use smith-parser for detailed dependency analysis")
             } else if !hasFrameworks && !hasSPMDeps {
                 print("")
                 print("ℹ️  No external dependencies detected")
             } else {
                 print("")
-                print("💡 Install smith-xcsift for detailed dependency analysis including:")
+                print("💡 Use smith-parser for detailed dependency analysis including:")
                 print("   • Dependency tree visualization")
                 print("   • Circular dependency detection")
                 print("   • Dependency conflict analysis")
@@ -358,16 +270,16 @@ extension Xcode {
 extension Xcode {
     struct Parse: ParsableCommand {
         static let configuration = CommandConfiguration(
-            abstract: "Parse Xcode build output from stdin using sbparser",
+            abstract: "Parse Xcode build output from stdin using smith-parser",
             discussion: """
-            Parses Xcode build output from stdin and delegates to sbparser
+            Parses Xcode build output from stdin and delegates to smith-parser
             for unified parsing across all build systems.
 
             Examples:
               xcodebuild -scheme MyApp | smith xcode parse
               xcodebuild clean build | smith xcode parse --format=json
 
-            Note: This command now delegates to sbparser, which provides
+            Note: This command now delegates to smith-parser, which provides
             consolidated parsing for Xcode, Swift, and SPM builds.
             """
         )
@@ -401,16 +313,12 @@ extension Xcode {
             print("🔍 PARSING XCODE BUILD OUTPUT")
             print("=============================")
 
-            // Delegate to sbparser for parsing
-            if let sbparserPath = findSBParserPath() {
+            // Delegate to smith-parser for parsing
+            if let smithParserPath = findSBParserPath() {
                 try runSBParserParse(output: output, format: format, verbose: verbose, compact: compact)
-            } else if let xcsiftPath = findSmithXCSiftPath() {
-                // Fallback to smith-xcsift for backward compatibility
-                print("⚠️  sbparser not found - falling back to smith-xcsift")
-                try runSmithXCSiftParse(output: output, format: format, verbose: verbose, compact: compact)
             } else {
                 // Fallback basic parsing
-                print("⚠️  No parser tools found - using basic parsing")
+                print("⚠️  smith-parser not found - using basic parsing")
                 performBasicParse(output: output, format: format)
             }
         }
@@ -453,43 +361,6 @@ extension Xcode {
             }
         }
 
-        private func runSmithXCSiftParse(output: String, format: String, verbose: Bool, compact: Bool) throws {
-            var arguments = ["parse", "--format=\(format)"]
-            if verbose { arguments.append("--verbose") }
-            if compact { arguments.append("--compact") }
-
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: findSmithXCSiftPath()!)
-            process.arguments = arguments
-
-            let inputPipe = Pipe()
-            let outputPipe = Pipe()
-            let errorPipe = Pipe()
-
-            process.standardInput = inputPipe
-            process.standardOutput = outputPipe
-            process.standardError = errorPipe
-
-            try process.run()
-
-            // Write input to process
-            inputPipe.fileHandleForWriting.write(output.data(using: .utf8) ?? Data())
-            inputPipe.fileHandleForWriting.closeFile()
-
-            process.waitUntilExit()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let resultOutput = String(data: outputData, encoding: .utf8) ?? ""
-
-            if process.terminationStatus == 0 {
-                print(resultOutput)
-            } else {
-                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                let errorOutput = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-                print("❌ Parse failed: \(errorOutput)")
-                throw ExitCode.failure
-            }
-        }
 
         private func performBasicParse(output: String, format: String) {
             let hasErrors = output.contains(": error: ")

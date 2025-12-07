@@ -31,9 +31,9 @@ func findSmithTCATracePath() -> String? {
     findSmithToolPath("smith-tca-trace")
 }
 
-/// Find sbparser in common locations
+/// Find smith-parser in common locations
 func findSBParserPath() -> String? {
-    findSmithToolPath("sbparser")
+    findSmithToolPath("smith-parser")
 }
 
 /// Use the 'which' command to find an executable
