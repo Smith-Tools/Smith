@@ -1,3 +1,0 @@
-module SmithErrorHandling {
-    header "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithErrorHandling.build/include/SmithErrorHandling-Swift.h"
-}

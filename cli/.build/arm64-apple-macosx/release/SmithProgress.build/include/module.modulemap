@@ -1,3 +1,0 @@
-module SmithProgress {
-    header "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithProgress.build/include/SmithProgress-Swift.h"
-}

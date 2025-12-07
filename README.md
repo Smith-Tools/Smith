@@ -86,7 +86,7 @@ smith-xcsift analyze
 smith-xcsift rebuild --smart-strategy
 
 # Package analysis
-smith-spmsift analyze --metrics
+smith dependencies --metrics
 ```
 
 ### 4. Command Line Analysis
@@ -180,7 +180,7 @@ Smith/
 Analyzes package dependencies, detects conflicts, identifies version issues.
 
 ```bash
-swift package dump-package | smith-spmsift dump-package
+swift package dump-package | smith dependencies --format json
 ```
 
 ### Phase 2: Build Monitoring
@@ -287,7 +287,7 @@ swift build 2>&1 | smith-sbsift parse --format json
 swift build 2>&1 | smith-sbsift monitor --eta
 
 # Analyze SPM dependencies
-swift package dump-package | smith-spmsift dump-package
+swift package dump-package | smith dependencies --format json
 
 # Monitor Xcode builds
 smith-xcsift monitor --hang-detection
@@ -301,7 +301,7 @@ smith-xcsift rebuild --smart-strategy
 smith-xcsift diagnose --detailed
 
 # Analyze SPM conflicts
-smith-spmsift resolve
+smith dependencies --conflicts
 
 # Check environment
 smith environment
