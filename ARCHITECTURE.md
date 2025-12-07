@@ -4,195 +4,103 @@
 
 Smith is the **enforcement agent** in the Smith Tools ecosystem. It operates as the "construction police" for Swift development, with a philosophy centered on:
 
-1. **Strict Analysis of the Construction Process** - Not just checking final output
-2. **Real-Time Enforcement** - Catches problems as they happen, not after failure
-3. **System Police Attitude** - Uncompromising about code quality and build health
-4. **Complete Lifecycle Coverage** - From package setup through recovery
+1. **Value Delivery First** - Every feature is measured by: Does this save time? Does this prevent mistakes?
+2. **Strict Analysis of the Construction Process** - Not just checking final output
+3. **Real-Time Enforcement** - Catches problems as they happen, not after failure
+4. **System Police Attitude** - Uncompromising about code quality and build health
+5. **Complete Lifecycle Coverage** - From package setup through recovery
+
+### Value Delivery Principle
+
+Smith is not about being comprehensive. It's about being useful.
+
+Every command, every output format, every validation rule is evaluated by:
+- ✅ **Saves agents/developers time** - Smith findings are actionable and save implementation time
+- ✅ **Prevents real mistakes** - Smith catches architectural issues before they become costly
+- ✅ **Fits naturally into workflow** - Agents naturally reach for Smith when making decisions
+- ❌ **Wastes time** - Comprehensive but overwhelming output gets ignored
+- ❌ **Enforces for enforcement's sake** - Mandatory usage without clear benefit
 
 ---
 
-## Three Operational Phases
+## Unified smith CLI Approach
 
-### Phase 1: Package Setup & Dependency Analysis
+The `smith` CLI provides unified access to all analysis capabilities:
 
-**Tools**: `smith-spmsift`
-
-**When**: During package resolution and dependency updates
-
-**What it Does**:
-- Analyzes SPM Package structure
-- Detects circular dependencies
-- Identifies version conflicts
-- Reports branch dependencies (anti-patterns)
-- Estimates complexity and index time
-
-**Integration**:
 ```bash
-swift package dump-package | smith-spmsift dump-package --format json
-```
+# Project analysis and dependency review
+smith dependencies /path/to/project
 
----
-
-### Phase 2: Build Monitoring & Diagnosis
-
-**Tools**: `smith-sbsift`, `smith-xcsift`
-
-**When**: During active builds
-
-**What it Does**:
-
-**smith-sbsift** (Swift Build):
-- Real-time build progress tracking
-- File-level timing analysis
-- Build bottleneck identification
-- Intelligent hang detection with root cause analysis
-- 43% context reduction for AI agents
-
-**smith-xcsift** (Xcode):
-- Xcode-specific build analysis
-- Priority rebuild strategies
-- DerivedData cleanup and optimization
-- Build phase timing
-- Memory pressure detection
-
-**Integration**:
-```bash
-# Swift builds
-swift build 2>&1 | smith-sbsift parse --format json
-swift build 2>&1 | smith-sbsift monitor --eta --hang-detection
-
-# Xcode builds
-smith-xcsift rebuild --smart-strategy
-smith-xcsift monitor --hang-detection
-```
-
----
-
-### Phase 3: Code Review & Architectural Validation
-
-**Tools**: `smith-validation`, `smith-skill`, `smith`
-
-**When**: During code review and implementation
-
-**What it Does**:
-
-**smith-validation**:
-- TCA Rules 1.1-1.5 enforcement
-- Monolithic feature detection
-- Dependency injection validation
-- Code duplication detection
-- Progressive intelligence (3 analysis levels)
-
-**smith-skill** (Claude Code):
-- Architecture guidance for developers
-- Pattern reference and examples
-- Red flag detection for deprecated patterns
-- Anti-pattern identification
-
-**smith**:
-- Unified orchestration of all validation
-- Comprehensive project analysis
-- Environment status reporting
-
-**Integration**:
-```bash
-smith analyze /path/to/project --level critical
+# Architectural validation
 smith validate --tca
-smith optimize
+
+# Comprehensive analysis
+smith analyze /path/to/project
+
+# Build diagnostics
+smith diagnose
 ```
 
----
+**Key Capabilities**:
+- Package structure analysis (SPM/Xcode)
+- Dependency ranking and circular dependency detection
+- TCA architectural validation (Rules 1.1-1.5)
+- Build performance analysis
+- Code pattern validation
+- Environment diagnostics
 
-### Phase 4: Build Recovery & Diagnostics
-
-**Tools**: `smith-xcsift`, `smith-core`
-
-**When**: After build failures
-
-**What it Does**:
-- Intelligent hang detection with root cause analysis
-- Priority rebuild strategies:
-  - Clean with Cache Reset
-  - Memory-Optimized Rebuild
-  - Dependency Resolution Rebuild
-  - Fast Incremental Rebuild
-- DerivedData cleanup
-- Diagnostic reports
-
-**Integration**:
-```bash
-smith-xcsift diagnose --detailed
-smith-xcsift rebuild --smart-strategy
-```
+All analysis is integrated through the `smith` CLI, providing a consistent interface for:
+- Project setup and dependency review
+- During-development guidance
+- Code review validation
+- Build diagnostics and recovery
 
 ---
 
 ## Component Architecture
 
 ```
-smith-core (Foundation)
-    ↓ (provides shared models and utilities)
-    ├─→ smith-sbsift (Swift Build Analysis)
-    ├─→ smith-spmsift (SPM Analysis)
-    ├─→ smith-xcsift (Xcode Build Analysis)
-    └─→ smith-validation (Architectural Rules)
-        ↓
-        ├─→ smith (Orchestrator)
-        └─→ smith-skill (Claude Code Integration)
+smith-foundation (Shared Libraries)
+    ├─ SmithOutputFormatter - Consistent output
+    ├─ SmithErrorHandling - Error management
+    └─ SmithProgress - Progress tracking
+
+smith-build-analysis (Shared Parsing)
+    └─ Build output parsing and diagnostics
+
+smith (Unified CLI)
+    ├─ dependencies - Project and package analysis
+    ├─ validate - Architectural validation
+    ├─ analyze - Comprehensive analysis
+    └─ diagnose - Build diagnostics
+
+smith-validation (Rules Engine)
+    ├─ TCA Rules 1.1-1.5
+    ├─ Pattern validation
+    └─ Anti-pattern detection
+
+smith-skill (Claude Code Integration)
+    ├─ Architecture guidance
+    ├─ Pattern references
+    └─ Platform-specific patterns
 ```
 
-### smith-core
+### smith CLI
 
-**Purpose**: Universal Swift patterns and shared utilities
+**Purpose**: Unified interface to all Smith analysis
 
-**Provides**:
-- `BuildAnalysis` - Build status and metrics
-- `DependencyGraph` - Package dependency modeling
-- `HangDetector` - Intelligent hang detection with root cause
-- `BuildDiagnostics` - Type inference and TCA anti-patterns
-- `ProjectDetector` - SPM vs Xcode detection
-- `SyntaxValidators` - Code pattern validation
+**Primary Commands**:
+- `dependencies` - Analyze project dependencies and structure
+- `validate` - Validate architecture (e.g., TCA rules)
+- `analyze` - Comprehensive project analysis
+- `diagnose` - Build diagnostics
 
-**Used By**: All other Smith tools
-
-### smith-sbsift
-
-**Purpose**: Context-efficient Swift build output analysis
-
-**Capabilities**:
-- Parse Swift compiler output
-- Real-time progress tracking with ETA
-- File-level timing and bottleneck analysis
-- Hang detection and termination
-- 43% context reduction for AI
-
-**Deployment**: Homebrew
-
-### smith-spmsift
-
-**Purpose**: Context-efficient SPM analysis
-
-**Capabilities**:
-- Package structure analysis
-- Dependency tree visualization
-- Circular dependency detection
-- Version conflict reporting
-- 95%+ context savings vs raw output
-
-**Deployment**: Homebrew
-
-### smith-xcsift
-
-**Purpose**: Xcode-specific build analysis and recovery
-
-**Capabilities**:
-- Xcode project analysis
-- Priority rebuild strategies
-- DerivedData management
-- Build phase timing
-- Hang detection with diagnostics
-
-**Deployment**: Homebrew
+**Features**:
+- Auto-detects project type (SPM/Xcode)
+- Analyzes dependencies and imports
+- Validates TCA composition
+- Detects circular dependencies
+- Provides actionable error messages
 
 ### smith-validation
 
@@ -200,31 +108,21 @@ smith-core (Foundation)
 
 **Rules** (1.1-1.5):
 - Monolithic feature detection
-- Proper DI patterns
-- Code duplication
+- Proper dependency injection patterns
+- Code duplication detection
 - Organization clarity
 - Coupling analysis
 
 **Output**: Progressive intelligence with automation confidence
 
-**Integrated Into**: Smith CLI and Skill
+### smith-foundation
 
-### smith
+**Purpose**: Shared utilities for consistent behavior across tools
 
-**Purpose**: Unified CLI orchestrator
-
-**Commands**:
-- `analyze` - Comprehensive project analysis
-- `validate` - Specific validation (e.g., `--tca`)
-- `optimize` - Performance suggestions
-- `detect` - Project type detection
-- `status` - Environment status
-- `environment` - Detailed environment info
-
-**Integration Points**:
-- Smith Core (models and diagnostics)
-- Smith Validation (rules engine)
-- Smith Skill (documentation and patterns)
+**Provides**:
+- Output formatting (TTY-aware)
+- Error handling (structured, actionable)
+- Progress tracking (with ETA)
 
 ### smith-skill
 
@@ -232,9 +130,7 @@ smith-core (Foundation)
 
 **Structure**:
 - `skill/SKILL.md` - Main skill definition
-- `skill/CLAUDE.md` - Agent instructions
 - `patterns/AGENTS-*.md` - Universal patterns
-- `patterns/AGENTS-DECISION-TREES.md` - Decision guidance
 - `platforms/PLATFORM-*.md` - Platform-specific patterns
 
 **Auto-Triggers On**:
@@ -243,10 +139,9 @@ smith-core (Foundation)
 - Swift patterns: `@State`, `async/await`, dependency injection
 
 **Features**:
-- Red flag detection (deprecated patterns)
+- Architecture guidance
+- Pattern examples
 - Anti-pattern identification
-- TCA composition validation
-- Platform-specific guidance
 
 ---
 
@@ -257,10 +152,11 @@ smith-core (Foundation)
 │              Developer's Workflow                        │
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
-│  Step 1: Setup Package                                  │
+│  Step 1: Project Setup                                  │
 │  ↓                                                       │
-│  smith-spmsift → Analyze dependencies                   │
-│                  Check for conflicts                    │
+│  smith dependencies /path → Analyze dependencies        │
+│                             Check for conflicts         │
+│                             Dependency rankings         │
 │                                                          │
 │  Step 2: Code Implementation                            │
 │  ↓                                                       │
@@ -268,25 +164,22 @@ smith-core (Foundation)
 │  ↓                                                       │
 │  Developer writes code                                  │
 │                                                          │
-│  Step 3: During Build                                   │
+│  Step 3: Code Review                                    │
 │  ↓                                                       │
-│  swift build 2>&1 | smith-sbsift                        │
-│  ↓                                                       │
-│  Real-time monitoring, hang detection                   │
+│  smith validate --tca → Architectural validation        │
+│  Smith Skill in Claude Code → TCA rules check           │
 │                                                          │
-│  Step 4: Code Review                                    │
+│  Step 4: Build                                          │
 │  ↓                                                       │
-│  smith validate --tca                               │
-│  Smith Skill in Claude Code                             │
+│  smith analyze → Comprehensive analysis                 │
 │  ↓                                                       │
-│  Architectural validation, TCA rules check              │
+│  Build and test                                         │
 │                                                          │
-│  Step 5: Build Failure (if any)                         │
+│  Step 5: Build Issues (if any)                          │
 │  ↓                                                       │
-│  smith-xcsift diagnose                                  │
-│  smith-xcsift rebuild --smart-strategy                  │
+│  smith diagnose → Intelligent diagnostics               │
 │  ↓                                                       │
-│  Intelligent recovery                                   │
+│  Recovery                                               │
 │                                                          │
 │  Step 6: Production Ready                               │
 │  ✓ All validations passed                               │
@@ -379,21 +272,21 @@ They use the same validation rules but serve different users.
 
 ### Adding a New Validation Rule
 
-1. Create rule in `validation/`
+1. Create rule in `smith-validation/`
 2. Add test cases
-3. Update smith
+3. Integrate into smith CLI
 4. Document in smith-skill
 
-### Adding a New Analysis Tool
+### Improving smith CLI
 
-1. Create tool structure following smith-*sift pattern
-2. Output JSON for integration with CLI
-3. Add orchestration to smith
-4. Document in START-HERE.md
+1. Add new command to smith CLI
+2. Implement analysis logic
+3. Ensure JSON output format
+4. Update documentation (START-HERE.md, ARCHITECTURE.md)
 
 ### Adding Platform-Specific Guidance
 
-1. Create `platforms/PLATFORM-*.md` in skill
+1. Create `platforms/PLATFORM-*.md` in smith-skill
 2. Document patterns for that platform
 3. Add auto-trigger keywords
 4. Link from main SKILL.md

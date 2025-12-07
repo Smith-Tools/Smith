@@ -6,11 +6,23 @@ Welcome to Smith, the **construction police** for Swift development. This guide 
 
 Smith is the **enforcement agent** in the Smith Tools ecosystem. It operates throughout your entire development lifecycle:
 
-- **During Build**: Real-time monitoring with `smith-sbsift`, `smith-spmsift`, `smith-xcsift`
+- **During Build**: Real-time monitoring with `smith` CLI
 - **During Code Review**: Architectural validation with TCA Rules 1.1-1.5
 - **For Recovery**: Smart rebuild strategies and diagnostic analysis
 
 Smith's philosophy: **strict analysis of the construction process, not just checking final output**.
+
+## Core Principle: Value Delivery
+
+Smith tools exist for one reason: **help you write better code faster**.
+
+Every command, every check, every report is measured by: **Does this save you time? Does this prevent mistakes?**
+
+This means:
+- Smith tells you what MATTERS for your decision, not everything possible
+- Smith output is actionable, not just informative
+- Smith integrates with your workflow, not replacing it
+- Smith gets out of the way when not needed
 
 ---
 
@@ -46,11 +58,11 @@ smith validate --tca
 smith optimize
 ```
 
-### 3. **Use Diagnostic Tools During Build**
+### 3. **Use Smith CLI for Build Analysis**
 ```bash
-swift build 2>&1 | smith-sbsift analyze --hang-detection
-smith-spmsift show-dependencies
-smith-xcsift rebuild --smart-strategy
+smith dependencies /path/to/project
+smith validate --tca
+smith analyze
 ```
 
 ---
@@ -85,11 +97,10 @@ smith-xcsift rebuild --smart-strategy
    - Validates command matches project type
    - Warns of issues before execution
 
-**Ecosystem Tools** (called by Smith):
-- `smith-sbsift` - Swift build output analysis
-- `smith-spmsift` - SPM dependency analysis
-- `smith-xcsift` - Xcode project analysis
+**Core Components**:
+- `smith` CLI - Unified interface for all analysis
 - `smith-validation` - TCA rules and patterns
+- `smith-foundation` - Shared libraries and utilities
 
 ### TCA Rules (Rules 1.1-1.5)
 
@@ -116,10 +127,8 @@ brew install smith
 ```
 
 This installs:
-- `smith` - CLI tool
-- `smith-sbsift` - Swift build analyzer
-- `smith-spmsift` - SPM analyzer
-- `smith-xcsift` - Xcode analyzer
+- `smith` - Unified CLI tool
+- `smith-validation` - TCA validation
 - Smith Claude Code skill
 
 ---
@@ -132,20 +141,20 @@ smith analyze --level critical
 smith validate --tca
 ```
 
-### Diagnose Build Hangs
+### Diagnose Build Issues
 ```bash
-swift build 2>&1 | smith-sbsift analyze --hang-detection
-smith-xcsift diagnose
+smith analyze
+smith validate --tca
 ```
 
 ### Debug Package Dependencies
 ```bash
-smith-spmsift show-dependencies --format json
+smith dependencies /path/to/project --format json
 ```
 
-### Get Smart Rebuild Strategy
+### Validate Architecture
 ```bash
-smith-xcsift rebuild --smart-strategy
+smith validate --tca
 ```
 
 ---
@@ -187,7 +196,7 @@ Maxwell teaches pattern → You implement → Smith validates
 Ask about `@Reducer`, `@ObservableState`, `@Shared`, `Reducer` composition
 
 ### For Build Issues
-Use `smith-sbsift analyze --hang-detection` or `smith-xcsift diagnose`
+Use `smith analyze` or `smith validate`
 
 ### For Architectural Validation
 Use `smith validate --tca` or invoke Smith skill in Claude Code
@@ -199,7 +208,7 @@ Use `smith validate --tca` or invoke Smith skill in Claude Code
 1. **Read [ARCHITECTURE.md](ARCHITECTURE.md)** - Understand Smith's design
 2. **Try smith** - `smith analyze /path/to/project`
 3. **Use Smith Skill** - Ask about your code architecture
-4. **Check Your Builds** - Pipe builds through `smith-sbsift`
+4. **Analyze Your Project** - Use `smith dependencies` and `smith analyze`
 
 ---
 
