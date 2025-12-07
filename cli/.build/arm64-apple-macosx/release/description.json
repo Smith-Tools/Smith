@@ -1730,10 +1730,6 @@
         },
         {
           "kind" : "file",
-          "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SmartAnalyzeCommand.swift"
-        },
-        {
-          "kind" : "file",
           "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SwiftCommand.swift"
         },
         {
@@ -1832,7 +1828,6 @@
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/DependenciesCommand.swift.o",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/ParseCommand.swift.o",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/SPMCommand.swift.o",
-        "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/SmartAnalyzeCommand.swift.o",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/SwiftCommand.swift.o",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/TCACommand.swift.o",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/ValidationCommand.swift.o",
@@ -1918,10 +1913,6 @@
         },
         {
           "kind" : "file",
-          "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/SmartAnalyzeCommand.swift.o"
-        },
-        {
-          "kind" : "file",
           "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/SwiftCommand.swift.o"
         },
         {
@@ -1994,7 +1985,6 @@
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/DependenciesCommand.swift",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/ParseCommand.swift",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SPMCommand.swift",
-        "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SmartAnalyzeCommand.swift",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SwiftCommand.swift",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/TCACommand.swift",
         "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/ValidationCommand.swift",
@@ -3819,7 +3809,6 @@
       "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/DependenciesCommand.swift",
       "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/ParseCommand.swift",
       "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SPMCommand.swift",
-      "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SmartAnalyzeCommand.swift",
       "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SwiftCommand.swift",
       "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/TCACommand.swift",
       "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/ValidationCommand.swift",
@@ -4998,10 +4987,6 @@
         {
           "kind" : "file",
           "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SPMCommand.swift"
-        },
-        {
-          "kind" : "file",
-          "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SmartAnalyzeCommand.swift"
         },
         {
           "kind" : "file",
@@ -6879,10 +6864,6 @@
         },
         {
           "kind" : "file",
-          "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/SmartAnalyzeCommand.swift.o"
-        },
-        {
-          "kind" : "file",
           "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/SmithCLI.swift.o"
         },
         {
@@ -7280,10 +7261,6 @@
         {
           "kind" : "file",
           "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/SPMCommand.swift.o"
-        },
-        {
-          "kind" : "file",
-          "name" : "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/release/SmithCLI.build/SmartAnalyzeCommand.swift.o"
         },
         {
           "kind" : "file",

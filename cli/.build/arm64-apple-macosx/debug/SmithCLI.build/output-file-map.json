@@ -23,13 +23,6 @@
     "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLI.build/SPMCommand.swiftdeps",
     "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLI.build/SPMCommand.dia"
   },
-  "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SmartAnalyzeCommand.swift": {
-    "dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLI.build/SmartAnalyzeCommand.d",
-    "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLI.build/SmartAnalyzeCommand.swift.o",
-    "swiftmodule": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLI.build/SmartAnalyzeCommand~partial.swiftmodule",
-    "swift-dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLI.build/SmartAnalyzeCommand.swiftdeps",
-    "diagnostics": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLI.build/SmartAnalyzeCommand.dia"
-  },
   "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/Sources/SmithCLI/Commands/SwiftCommand.swift": {
     "dependencies": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLI.build/SwiftCommand.d",
     "object": "/Volumes/Plutonian/_Developer/Smith-Tools/Smith/cli/.build/arm64-apple-macosx/debug/SmithCLI.build/SwiftCommand.swift.o",

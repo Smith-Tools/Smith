@@ -6,6 +6,24 @@
 
 ---
 
+## ⚠️ ARCHITECTURE UPDATE (December 2025)
+
+**smith-core and smith-platforms skills have been REMOVED**
+
+These obsolete skills have been removed and their content migrated:
+- **smith-core** content → **maxwell** (personal discoveries)
+- **smith-platforms** content → **scully** (package documentation) + **maxwell** (patterns)
+
+The current architecture uses:
+- **smith** - Orchestrator skill (analyzes code, routes questions)
+- **maxwell** - Personal discoveries and case studies
+- **sosumi** - Apple documentation and WWDC sessions
+- **scully** - Package documentation (optional)
+
+This summary document reflects the old 3-skill architecture which has been simplified.
+
+---
+
 ## Executive Summary
 
 Fixed critical gap in Smith's auto-trigger behavior: **Smith now proactively detects when users are building projects and offers guidance, rather than remaining silently unavailable.**

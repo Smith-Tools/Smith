@@ -1,6 +1,6 @@
 ---
 name: smith
-description: Swift architecture validation, code analysis, and build health coordinator. Orchestrates smith-core and smith-platforms for comprehensive development guidance. For TCA-specific questions use maxwell-pointfree, for platform patterns use smith-platforms, for general Swift use smith-core.
+description: Swift architecture validation, code analysis, and build health coordinator. Routes questions to maxwell (discoveries), sosumi (Apple docs), and scully (package docs) for comprehensive development guidance.
 tags:
   - "Swift architecture"
   - "validation"
@@ -34,61 +34,96 @@ version: "3.0.0"
 author: "Claude Code Skill - Smith Architecture"
 ---
 
-# Smith - Architecture Validation & Coordination
+# Smith Skill - Auto-Trigger & Ecosystem Routing
 
-## Core Responsibility
+## What This Skill Is
 
-Smith coordinates Swift architecture validation and provides code analysis. Smith interprets validation results and routes domain-specific questions to specialized skills.
+This is the **Smith SKILL** (not the Smith agent). It's designed for:
+- ✅ **Auto-trigger** on build commands (xcodebuild, swift build, etc.)
+- ✅ **Other ecosystems** (beyond Claude, e.g., Codex, VS Code extensions)
+- ✅ **Routing guidance** - tells you which skill/agent to ask
 
-## Specialized Skills
+## What This Skill Does NOT Do
 
-Smith works with three specialized skills for comprehensive coverage:
+This skill does NOT:
+- ❌ Have built-in knowledge
+- ❌ Call subagents (only agents can do that)
+- ❌ Provide detailed analysis
 
-- **smith-core**: General Swift architecture, dependencies, concurrency, testing, access control
-- **smith-tca**: Swift Composable Architecture patterns, reducers, state management, navigation
-- **smith-platforms**: Platform-specific patterns for iOS, macOS, iPadOS, visionOS
+## What This Skill Provides
 
-## Quick Navigation
+This skill gives you:
+- ✅ Quick routing to the right resource
+- ✅ Command suggestions (smith CLI)
+- ✅ "Ask @maxwell" style guidance
 
-For comprehensive guidance on Swift architecture, dependencies, and best practices:
+## What Smith DOES Provide
 
-- **Smith Core Knowledge**: [knowledge/AGENTS-AGNOSTIC.md](knowledge/AGENTS-AGNOSTIC.md)
-- **Decision Trees**: [knowledge/AGENTS-DECISION-TREES.md](knowledge/AGENTS-DECISION-TREES.md)
-- **Claude Integration**: [knowledge/CLAUDE.md](knowledge/CLAUDE.md)
-
-## Search Your Knowledge
-
-When analyzing code or architectural patterns:
-
-1. **Use Glob** to find relevant files: `Glob("knowledge/**/*.md")`
-2. **Use Grep** to search content: `Grep("pattern keyword", "knowledge/")`
-3. **Use Read** to access files: `Read("knowledge/AGENTS-AGNOSTIC.md")`
-
-All knowledge is in the `knowledge/` directory.
+Smith provides:
+- ✅ Code analysis via `smith` CLI commands
+- ✅ Build diagnostics and validation
+- ✅ Interpretation of validation results
+- ✅ Routing questions to appropriate knowledge sources
 
 ## How Smith Routes Questions
 
-**Single-domain questions auto-trigger appropriate skill:**
-- "How do I use @Dependency?" → smith-core
-- "How do I implement @Shared state?" → smith-tca
-- "How do I structure visionOS views?" → smith-platforms
+**Smith routes to specialized skills based on natural triggers:**
 
-**Multi-domain questions:** Smith synthesizes from multiple skills
-**Code analysis questions:** Smith interprets validation results
-**Build diagnostics:** Smith uses bash tools for analysis
+| Question Type | Auto-Triggers | Or Use |
+|--------------|---------------|--------|
+| Swift patterns, TCA | @maxwell (auto) | `@maxwell` explicitly |
+| Apple APIs, WWDC | @sosumi (auto) | `@sosumi` explicitly |
+| Package documentation | @scully (auto) | `@scully` explicitly |
+| TCA validation | - | `smith validate --tca` (uses smith-validation CLI) |
+| TCA performance | - | `smith trace` (uses smith-tca-trace CLI) |
+| Build analysis | smith-skill suggests | `smith CLI` commands |
+
+**Complete Ecosystem:**
+- **4 Skills**: smith, maxwell, sosumi, scully (auto-trigger)
+- **2 Agents**: smith, maxwell (can be called via @name)
+- **Pure CLI Tools**: smith-validation, smith-tca-trace, etc. (used by smith-CLI)
 
 ## When to Use Smith
 
 ✅ **Use Smith for:**
-- Code structure validation and analysis
-- Build diagnostics and troubleshooting
-- Architectural guidance through pattern reference
-- Interpretation of validation results
+- Code structure validation: `@smith validate my code`
+- Build diagnostics: `@smith why is my build hanging?`
+- Project analysis: `smith analyze /path/to/project`
+- Interpreting validation results
 
-❌ **Don't use Smith for:**
-- Detailed pattern teaching (skills handle this)
-- TCA-specific guidance (use smith-tca directly)
-- Platform API documentation (use smith-platforms directly)
+❌ **DON'T ask Smith for knowledge:**
+- "How do I implement TCA patterns?" → Ask `@maxwell` instead
+- "What's the Apple recommended approach?" → Ask `@sosumi` instead
+- "What does this package offer?" → Ask `@scully` instead
+
+**Smith will route you to the right skill for knowledge questions.**
+
+---
+
+## Smith Agent vs Smith Skill
+
+### **Use @smith (Agent) When:**
+- You want detailed analysis
+- You need coordination with multiple skills/agents
+- You're in Claude and can invoke agents explicitly
+- Example: `"@smith validate my TCA reducer architecture"`
+
+### **Use Smith Skill When:**
+- You want quick routing guidance
+- You're in a non-Claude environment
+- A build command auto-triggered this skill
+- Example: Auto-triggered when you run `xcodebuild build...`
+
+### **The Relationship:**
+```
+@smith (AGENT) can call subagents
+└── Task(maxwell) for patterns
+└── Uses smith CLI for analysis
+
+smith (SKILL) provides routing
+└── "Ask @maxwell for patterns"
+└── "Use smith CLI for diagnostics"
+```
 
 ---
 

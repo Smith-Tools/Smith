@@ -65,7 +65,7 @@ The Smith Tools ecosystem is a unified system for Swift development discipline. 
 
 These are standalone utilities that Smith orchestrates:
 
-### smith-core
+### smith-diagnostics
 
 **Purpose**: Shared foundation for all Smith tools
 
@@ -77,7 +77,7 @@ These are standalone utilities that Smith orchestrates:
 
 **Used By**: All other Smith tools
 
-**Repository**: `smith-core/`
+**Repository**: `smith-diagnostics/`
 
 ### smith-sbsift (Swift Build Sift)
 
@@ -181,7 +181,7 @@ smith-xcsift monitor --hang-detection
         └────────┬───────┘            │
                  │                    │
           ┌──────▼───────┐      ┌────▼──────┐
-          │smith-core    │      │SQLite DB  │
+          │smith-diagnostics│      │SQLite DB  │
           │(shared libs) │      │153 docs   │
           └──────┬───────┘      └───────────┘
                  │
@@ -306,10 +306,8 @@ Smith Tools/
 │   ├── database/
 │   └── install.sh
 │
-├── smith-core/                     [Shared library]
-├── smith-sbsift/                   [Swift build analyzer]
-├── smith-spmsift/                  [SPM analyzer]
-├── smith-xcsift/                   [Xcode analyzer]
+├── smith-diagnostics/              [Shared library]
+├── smith-foundation/               [Foundation libraries]
 ├── smith-validation/               [Rules engine]
 │
 ├── sosumi/                         [Apple docs/WWDC search]

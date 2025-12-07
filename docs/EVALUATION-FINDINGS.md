@@ -6,6 +6,24 @@
 
 ---
 
+## ⚠️ ARCHITECTURE UPDATE (December 2025)
+
+**smith-core and smith-platforms skills have been REMOVED**
+
+These obsolete skills have been removed and their content migrated:
+- **smith-core** content → **maxwell** (personal discoveries)
+- **smith-platforms** content → **scully** (package documentation) + **maxwell** (patterns)
+
+The current architecture uses:
+- **smith** - Orchestrator skill (analyzes code, routes questions)
+- **maxwell** - Personal discoveries and case studies
+- **sosumi** - Apple documentation and WWDC sessions
+- **scully** - Package documentation (optional)
+
+This evaluation document reflects the old 3-skill architecture (smith, smith-core, smith-platforms) which has been simplified.
+
+---
+
 ## Your Observation
 
 > "When an agent is building a project, even if Smith has been mentioned in the conversation, he's still building without following any guidelines and Smith has not been auto-trigger. What do you think about this interaction? Because Smith has a lot to bring to the table when it comes to building."

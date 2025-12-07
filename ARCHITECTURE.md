@@ -247,14 +247,14 @@ This separation allows:
 - Clear responsibility
 - Easy testing
 
-### Why smith-core?
+### Why smith-diagnostics?
 
 All tools need:
 - Consistent data models
 - Hang detection logic
 - Build analysis utilities
 
-`smith-core` provides these as a shared library, ensuring:
+`smith-diagnostics` provides these as a shared library, ensuring:
 - Consistent behavior
 - Reduced duplication
 - Easy updates

@@ -39,20 +39,16 @@ echo ""
 echo "🎯 Installing Claude Code skills..."
 echo "   Removing old installations..."
 rm -rf "$CLAUDE_SKILLS/smith" 2>/dev/null || true
-rm -rf "$CLAUDE_SKILLS/smith-core" 2>/dev/null || true
-rm -rf "$CLAUDE_SKILLS/smith-platforms" 2>/dev/null || true
 rm -rf "$CLAUDE_SKILLS/skill-smith" 2>/dev/null || true
 
 echo "   Deploying skills..."
 
-# Deploy each skill (smith, smith-core, smith-platforms)
-for skill in smith smith-core smith-platforms; do
-    echo "   Installing $skill..."
-    mkdir -p "$CLAUDE_SKILLS/$skill"
-    cp -r "$SMITH_DIR/skills/$skill"/* "$CLAUDE_SKILLS/$skill/"
-done
+# Deploy main smith skill
+echo "   Installing smith..."
+mkdir -p "$CLAUDE_SKILLS/smith"
+cp -r "$SMITH_DIR/skills/smith"/* "$CLAUDE_SKILLS/smith/"
 
-echo "✅ Installed 3 skills to $CLAUDE_SKILLS/"
+echo "✅ Installed 1 skill to $CLAUDE_SKILLS/"
 
 # Check PATH
 echo ""
