@@ -79,11 +79,11 @@ For detailed build analysis and recovery:
 
 ```bash
 # Swift builds with analysis
-swift build 2>&1 | smith-sbsift parse --format json
+swift build 2>&1 | smith parse --format json
 
 # Xcode analysis and recovery
-smith-xcsift analyze
-smith-xcsift rebuild --smart-strategy
+smith xcode analyze
+smith xcode monitor --hang-detection
 
 # Package analysis
 smith dependencies --metrics
@@ -175,7 +175,7 @@ Smith/
 ## Smith's Four Operational Phases
 
 ### Phase 1: Package Setup
-**Tool**: `smith-spmsift`
+**Tool**: `smith dependencies`
 
 Analyzes package dependencies, detects conflicts, identifies version issues.
 
@@ -184,12 +184,12 @@ swift package dump-package | smith dependencies --format json
 ```
 
 ### Phase 2: Build Monitoring
-**Tools**: `smith-sbsift`, `smith-xcsift`
+**Tools**: `smith parse`
 
 Real-time monitoring with hang detection, bottleneck identification, progress tracking.
 
 ```bash
-swift build 2>&1 | smith-sbsift monitor --eta --hang-detection
+swift build 2>&1 | smith parse --format json
 ```
 
 ### Phase 3: Code Review
@@ -205,13 +205,13 @@ smith validate /path/to/project --level=comprehensive --format=json
 ```
 
 ### Phase 4: Build Recovery
-**Tool**: `smith-xcsift`
+**Tool**: `smith xcode`
 
 Smart rebuild strategies, intelligent diagnostics, recovery recommendations.
 
 ```bash
-smith-xcsift rebuild --smart-strategy
-smith-xcsift diagnose --detailed
+smith xcode rebuild --smart-strategy
+smith xcode diagnose --detailed
 ```
 
 ---
@@ -283,22 +283,22 @@ smith status
 
 ```bash
 # Monitor Swift builds with hang detection
-swift build 2>&1 | smith-sbsift parse --format json
-swift build 2>&1 | smith-sbsift monitor --eta
+swift build 2>&1 | smith parse --format json
+swift build 2>&1 | smith monitor --eta
 
 # Analyze SPM dependencies
 swift package dump-package | smith dependencies --format json
 
 # Monitor Xcode builds
-smith-xcsift monitor --hang-detection
-smith-xcsift rebuild --smart-strategy
+smith xcode monitor --hang-detection
+smith xcode rebuild --smart-strategy
 ```
 
 ### Diagnostics
 
 ```bash
 # Diagnose build issues
-smith-xcsift diagnose --detailed
+smith xcode diagnose --detailed
 
 # Analyze SPM conflicts
 smith dependencies --conflicts
@@ -352,7 +352,7 @@ brew install smith
 ├─────────────────────────────────────────┤
 │                                         │
 │  1. Setup Package                       │
-│     ↓ smith-spmsift → Check deps        │
+│     ↓ smith dependencies → Check deps   │
 │                                         │
 │  2. Get Pattern Guidance                │
 │     ↓ Maxwell → Learn pattern           │
@@ -361,13 +361,13 @@ brew install smith
 │     ↓ Your code                         │
 │                                         │
 │  4. Build with Monitoring               │
-│     ↓ smith-sbsift → Real-time feedback│
+│     ↓ smith parse → Real-time feedback  │
 │                                         │
 │  5. Code Review                         │
 │     ↓ Smith → Architectural validation  │
 │                                         │
 │  6. Build Recovery (if needed)          │
-│     ↓ smith-xcsift → Smart recovery    │
+│     ↓ smith xcode → Smart recovery      │
 │                                         │
 │  7. Production Ready ✓                  │
 │                                         │
@@ -396,7 +396,7 @@ brew install smith
 
 Issues in Smith Tools are tracked in the respective repositories:
 - CLI/Skill issues: This repository
-- Build tool issues: smith-sbsift, smith-spmsift, smith-xcsift
+- Build tool issues: smith-parser
 - Validation issues: smith-validation
 
 ---
@@ -417,7 +417,7 @@ Issues in Smith Tools are tracked in the respective repositories:
 2. **Read START-HERE.md**: Get oriented
 3. **Try smith**: `smith analyze /path/to/project`
 4. **Use Smith in Claude Code**: `"@smith validate my code"`
-5. **Monitor your builds**: Pipe through `smith-sbsift`
+5. **Monitor your builds**: Pipe through `smith parse`
 
 ---
 
