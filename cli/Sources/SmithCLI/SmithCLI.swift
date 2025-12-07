@@ -6,7 +6,7 @@ import SmithErrorHandling
 import SmithProgress
 
 @main
-struct SmithCLI: ParsableCommand {
+struct Smith: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "Smith Framework CLI - Unified build analysis and optimization tool",
         discussion: """
@@ -15,7 +15,7 @@ struct SmithCLI: ParsableCommand {
         It provides comprehensive build analysis, dependency management, hang detection,
         and optimization recommendations for Swift, Xcode, and SPM projects.
         """,
-        version: "2.0.0",
+        version: "2.0.1-debug",
         subcommands: [
             // Tier 1: Capability Commands (User-Facing)
             Analyze.self,           // Single smart entry point

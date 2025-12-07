@@ -7,7 +7,7 @@ import SmithProgress
 
 // MARK: - Dependencies Command
 
-struct DependenciesCommand: ParsableCommand {
+struct DependenciesCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "dependencies",
         abstract: "Unified dependency analysis for Xcode and SPM projects",
@@ -29,7 +29,7 @@ struct DependenciesCommand: ParsableCommand {
     )
 
     @Argument(help: "Path to analyze (default: current directory)")
-    var path: String = "."
+    var path: String?
 
     @Flag(name: .long, help: "Show dependency tree")
     var tree = false
@@ -56,24 +56,37 @@ struct DependenciesCommand: ParsableCommand {
     var async = false
 
     func run() async throws {
+        // Default path to current directory if not provided
+        let projectPath = path ?? "."
+        
         let output = SmithCLIOutput()
-        output.section("DEPENDENCY ANALYSIS")
+        
+        // Skip all human-readable output if JSON format requested
+        let isJSONMode = (format == "json")
+        
+        if !isJSONMode {
+            output.section("DEPENDENCY ANALYSIS")
+        }
 
         // Validate and resolve path
         let resolvedPath = try ErrorHandler.processToolResult(
-            ErrorHandler.validateProjectPath(path),
+            ErrorHandler.validateProjectPath(projectPath),
             format: format
         )
 
-        output.info("Path: \(resolvedPath)")
-        output.info("Detecting project types...")
+        if !isJSONMode {
+            output.info("Path: \(resolvedPath)")
+            output.info("Detecting project types...")
+        }
 
         // Detect all project types in the directory
         let projectTypes = detectAllProjectTypes(at: resolvedPath)
 
         if projectTypes.isEmpty {
-            output.error("No supported projects found at \(resolvedPath)")
-            output.info("Supported: Xcode projects (.xcodeproj, .xcworkspace) and Swift Packages (Package.swift)")
+            if !isJSONMode {
+                output.error("No supported projects found at \(resolvedPath)")
+                output.info("Supported: Xcode projects (.xcodeproj, .xcworkspace) and Swift Packages (Package.swift)")
+            }
             throw ExitCode.failure
         }
 
@@ -92,24 +105,30 @@ struct DependenciesCommand: ParsableCommand {
             }
         }
 
-        output.info("Found: \(hasXcodeProject ? "Xcode " : "")\(hasXcodeProject && hasSPMProject ? "+ " : "")\(hasSPMProject ? "Swift Package " : "")")
+        if !isJSONMode {
+            output.info("Found: \(hasXcodeProject ? "Xcode " : "")\(hasXcodeProject && hasSPMProject ? "+ " : "")\(hasSPMProject ? "Swift Package " : "")")
+        }
 
         // Run Xcode dependency analysis if found
         if hasXcodeProject {
-            output.info("")
-            print("XCODE DEPENDENCY ANALYSIS")
+            if !isJSONMode {
+                output.info("")
+                print("XCODE DEPENDENCY ANALYSIS")
+            }
             try analyzeXcodeDependencies(at: resolvedPath)
         }
 
         // Run SPM dependency analysis if found
         if hasSPMProject {
-            output.info("")
-            print("SWIFT PACKAGE DEPENDENCY ANALYSIS")
+            if !isJSONMode {
+                output.info("")
+                print("SWIFT PACKAGE DEPENDENCY ANALYSIS")
+            }
             try analyzeSPMDependencies(at: resolvedPath)
         }
 
         // Show summary if multiple project types
-        if hasXcodeProject && hasSPMProject {
+        if hasXcodeProject && hasSPMProject && !isJSONMode {
             output.info("")
             print("COMBINED SUMMARY")
             output.info("✅ Analysis complete for both Xcode and Swift Package dependencies")
@@ -117,7 +136,7 @@ struct DependenciesCommand: ParsableCommand {
         }
 
         // Discover documentation if requested
-        if withDocs && hasSPMProject {
+        if withDocs && hasSPMProject && !isJSONMode {
             output.info("")
             print("DOCUMENTATION DISCOVERY")
 
