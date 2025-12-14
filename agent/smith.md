@@ -542,6 +542,10 @@ maxwell domain TCA
 # Apple documentation reference
 sosumi docs "SwiftUI performance"
 sosumi session "build optimization"
+
+# Package analysis (Scully)
+scully patterns ComposableArchitecture --limit 10
+scully docs Alamofire --limit 2000
 ```
 
 ### Enforcement Workflow
